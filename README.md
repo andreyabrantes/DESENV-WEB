@@ -6,6 +6,10 @@
 
 `HTML5` · `CSS3` · `JavaScript` · `Node.js` · `Express` · `SQLite` · `EmailJS`
 
+![Status](https://img.shields.io/badge/status-conclu%C3%ADdo-brightgreen)
+![Projeto](https://img.shields.io/badge/projeto-acad%C3%AAmico-blue)
+![Licen%C3%A7a](https://img.shields.io/badge/licen%C3%A7a-MIT-lightgrey)
+
 </div>
 
 ---
@@ -13,18 +17,21 @@
 ## 📑 Sumário
 
 1. [🌟 Sobre o Projeto](#-sobre-o-projeto)
-2. [✨ Funcionalidades](#-funcionalidades)
-3. [🛠️ Tecnologias](#️-tecnologias)
-4. [🗂️ Estrutura de Arquivos](#️-estrutura-de-arquivos)
-5. [📄 Páginas](#-páginas)
-6. [🎨 Identidade Visual](#-identidade-visual)
-7. [✨ Animações e Efeitos](#-animações-e-efeitos)
-8. [📱 Responsividade](#-responsividade)
-9. [📧 Integração EmailJS](#-integração-emailjs)
-10. [⚙️ Backend (API REST)](#️-backend-api-rest)
-11. [🔒 Segurança](#-segurança)
-12. [🚀 Como Usar](#-como-usar)
-13. [👥 Equipe](#-equipe)
+2. [🎓 Contexto Educacional](#-contexto-educacional)
+3. [✨ Funcionalidades](#-funcionalidades)
+4. [🛠️ Tecnologias](#️-tecnologias)
+5. [🗂️ Estrutura de Arquivos](#️-estrutura-de-arquivos)
+6. [📄 Páginas](#-páginas)
+7. [🎨 Identidade Visual](#-identidade-visual)
+8. [✨ Animações e Efeitos](#-animações-e-efeitos)
+9. [📱 Responsividade](#-responsividade)
+10. [📧 Integração EmailJS](#-integração-emailjs)
+11. [⚙️ Backend (API REST)](#️-backend-api-rest)
+12. [🔌 Referência da API](#-referência-da-api)
+13. [🔒 Segurança](#-segurança)
+14. [🚀 Como Usar](#-como-usar)
+15. [🧪 Testes Manuais da API](#-testes-manuais-da-api)
+16. [👥 Equipe](#-equipe)
 
 ---
 
@@ -35,6 +42,27 @@ Plataforma institucional com foco em **saúde hormonal**, **controle de peso** e
 O design usa uma **paleta pastel** (roxo, verde e azul) e efeitos visuais sofisticados — blobs animados, partículas flutuantes e animações de *scroll reveal* — para transmitir acolhimento e modernidade.
 
 > 💡 **Diferencial:** o front-end funciona de forma **100% independente** (basta abrir o `index.html`). O backend só é necessário para gravar os dados no banco; o envio de e-mails via **EmailJS** acontece direto do navegador.
+
+---
+
+## 🎓 Contexto Educacional
+
+> ⚠️ **Este é um projeto acadêmico, sem fins comerciais.**
+
+Este repositório foi desenvolvido como trabalho da disciplina de **Engenharia de Software** do **6º período**. Seus objetivos são estritamente didáticos:
+
+- 🎯 **Praticar** desenvolvimento front-end com HTML, CSS e JavaScript puros (sem frameworks).
+- 🧩 **Integrar** um front-end estático a uma API REST própria.
+- 🗄️ **Exercitar** persistência de dados com SQLite e boas práticas de modelagem.
+- 🔐 **Aplicar** conceitos de segurança em APIs (Helmet, rate limiting, CORS, validação).
+- 📚 **Documentar** o projeto de forma clara e reproduzível.
+
+**Avisos importantes:**
+
+- 🏥 **Não é um sistema médico real.** Não deve ser usado para atendimento, diagnóstico ou agendamento de pacientes reais.
+- 📝 **Dados são fictícios.** Telefone, endereço, CRM, depoimentos e estatísticas são *placeholders*.
+- 🔑 **Credenciais expostas.** As chaves do EmailJS estão no código por simplicidade didática — em produção, use um proxy no backend.
+- 🗃️ **Sem autenticação.** As rotas de listagem (`GET`) são abertas, o que é aceitável apenas em ambiente de estudo.
 
 ---
 
@@ -51,8 +79,8 @@ O design usa uma **paleta pastel** (roxo, verde e azul) e efeitos visuais sofist
 
 ### ⚙️ Back-end (API)
 
-- 🔌 **REST API** em Express com rotas para agendamentos e pré-avaliações.
-- 🗄️ **Persistência** em SQLite com criação automática de tabelas e migração.
+- 🔌 **REST API** em Express com rotas para agendamentos, pré-avaliações e disponibilidade de horários.
+- 🗄️ **Persistência** em SQLite com criação automática de tabelas e migração de colunas.
 - 🛡️ **Segurança**: Helmet, rate limiting, CORS configurável e validação de entrada.
 - 📦 **Zero build**: nenhuma etapa de compilação necessária.
 
@@ -91,9 +119,15 @@ O design usa uma **paleta pastel** (roxo, verde e azul) e efeitos visuais sofist
 │
 ├── backend/                 # ⚙️ API Node.js + Express + SQLite
 │   ├── server.js            #   Rotas REST + middlewares de segurança
-│   ├── database.js          #   Conexão e schema do SQLite
+│   ├── database.js          #   Conexão, schema e migração do SQLite
 │   ├── package.json         #   Dependências e scripts
 │   └── database.db          #   Banco local (ignorado pelo Git)
+│
+├── DEV-FRONT-END/           # 📦 Versão isolada da landing page (entrega parcial)
+│   ├── index.html
+│   ├── style.css
+│   ├── script.js
+│   └── README.md
 │
 └── README.md                # 📖 Documentação do projeto
 ```
@@ -133,6 +167,14 @@ O design usa uma **paleta pastel** (roxo, verde e azul) e efeitos visuais sofist
 | **Formulário** | Nome, telefone, e-mail, tipo de consulta e observações |
 | **Resumo** | Exibe data e horário selecionados em tempo real |
 | **Modal Sucesso/Erro** | Feedback após o envio via EmailJS |
+
+**Horários disponíveis (slots fixos):**
+
+```
+08:00 · 09:00 · 10:00 · 11:00 · 13:00 · 14:00 · 14:30 · 15:30 · 16:00 · 17:00
+```
+
+Os slots já ocupados são obtidos em tempo real via `GET /api/horarios-ocupados?data=YYYY-MM-DD`.
 
 ### 📋 `pre-avaliacao.html` — Pré-Avaliação
 
@@ -227,16 +269,69 @@ npm start        # inicia em http://localhost:3000
 # ou npm run dev  # reinicia automaticamente a cada alteração
 ```
 
-### 🔌 Endpoints
+### 🗄️ Modelo de Dados
 
-| Método | Rota | Descrição |
+**Tabela `agendamentos`**
+
+| Coluna | Tipo | Restrições |
 |---|---|---|
-| `POST` | `/api/agendamentos` | Cria um agendamento |
-| `GET` | `/api/agendamentos` | Lista agendamentos |
-| `POST` | `/api/pre-avaliacao` | Salva uma pré-avaliação |
-| `GET` | `/api/pre-avaliacao` | Lista pré-avaliações |
+| `id` | INTEGER | PK, AUTOINCREMENT |
+| `nomeCliente` | TEXT | NOT NULL |
+| `servico` | TEXT | NOT NULL |
+| `data` | TEXT | NOT NULL (`YYYY-MM-DD`) |
+| `horario` | TEXT | NOT NULL (`HH:MM`) |
+| `email` | TEXT | opcional |
+| `telefone` | TEXT | opcional |
+| `observacoes` | TEXT | opcional |
+| `criadoEm` | DATETIME | DEFAULT `CURRENT_TIMESTAMP` |
 
-#### Criar agendamento
+**Tabela `pre_avaliacoes`**
+
+| Coluna | Tipo | Restrições |
+|---|---|---|
+| `id` | INTEGER | PK, AUTOINCREMENT |
+| `respostas` | TEXT | NOT NULL (JSON serializado) |
+| `criadoEm` | DATETIME | DEFAULT `CURRENT_TIMESTAMP` |
+
+> 🔁 O `database.js` executa uma **migração idempotente** que adiciona as colunas `email`, `telefone` e `observacoes` caso o banco tenha sido criado com um schema anterior.
+
+---
+
+## 🔌 Referência da API
+
+**Base URL:** `http://localhost:3000`
+
+Todas as rotas estão sob o prefixo `/api/` e sujeitas ao **rate limit** de 100 requisições por IP a cada 15 minutos.
+
+### 📋 Resumo dos Endpoints
+
+| Método | Rota | Descrição | Status de sucesso |
+|---|---|---|---|
+| `POST` | `/api/agendamentos` | Cria um agendamento | `201 Created` |
+| `GET` | `/api/agendamentos` | Lista agendamentos (ordenados por data/hora) | `200 OK` |
+| `POST` | `/api/pre-avaliacao` | Salva uma pré-avaliação | `201 Created` |
+| `GET` | `/api/pre-avaliacao` | Lista pré-avaliações (mais recentes primeiro) | `200 OK` |
+| `GET` | `/api/horarios-ocupados?data=YYYY-MM-DD` | Lista horários já ocupados em uma data | `200 OK` |
+
+---
+
+### 1️⃣ `POST /api/agendamentos`
+
+Cria um novo agendamento. Valida campos obrigatórios, formato de data/horário, e-mail e rejeita datas no passado.
+
+**Corpo da requisição:**
+
+| Campo | Tipo | Obrigatório | Limite | Descrição |
+|---|---|---|---|---|
+| `nomeCliente` | string | ✅ | 120 | Nome do paciente |
+| `servico` | string | ✅ | 60 | Tipo de consulta |
+| `data` | string | ✅ | — | Formato `YYYY-MM-DD`, não pode ser passada |
+| `horario` | string | ✅ | — | Formato `HH:MM` |
+| `email` | string | ❌ | 254 | Deve ser um e-mail válido se informado |
+| `telefone` | string | ❌ | 20 | Telefone de contato |
+| `observacoes` | string | ❌ | 500 | Observações livres |
+
+**Exemplo:**
 
 ```bash
 curl -X POST http://localhost:3000/api/agendamentos \
@@ -244,7 +339,7 @@ curl -X POST http://localhost:3000/api/agendamentos \
   -d '{
     "nomeCliente": "Maria Silva",
     "servico": "Primeira consulta",
-    "data": "2026-09-15",
+    "data": "2026-12-15",
     "horario": "10:00",
     "email": "maria@email.com",
     "telefone": "(11) 99999-9999",
@@ -252,42 +347,185 @@ curl -X POST http://localhost:3000/api/agendamentos \
   }'
 ```
 
-**Resposta (`201 Created`):**
+**Resposta `201 Created`:**
 
 ```json
 {
   "id": 1,
   "nomeCliente": "Maria Silva",
   "servico": "Primeira consulta",
-  "data": "2026-09-15",
+  "data": "2026-12-15",
   "horario": "10:00",
   "email": "maria@email.com",
   "telefone": "(11) 99999-9999",
   "observacoes": "Preferência pelo período da manhã.",
-  "criadoEm": "2026-08-27T12:00:00.000Z"
+  "criadoEm": "2026-09-17T22:31:34.502Z"
 }
 ```
 
-#### Salvar pré-avaliação
+**Resposta `400 Bad Request` (validação):**
+
+```json
+{
+  "error": "Validação falhou",
+  "detalhes": [
+    "nomeCliente é obrigatório",
+    "servico é obrigatório",
+    "data não pode estar no passado",
+    "email inválido"
+  ]
+}
+```
+
+---
+
+### 2️⃣ `GET /api/agendamentos`
+
+Lista todos os agendamentos, ordenados por `data` e `horario` (crescente).
+
+**Exemplo:**
+
+```bash
+curl http://localhost:3000/api/agendamentos
+```
+
+**Resposta `200 OK`:**
+
+```json
+[
+  {
+    "id": 1,
+    "nomeCliente": "Maria Silva",
+    "servico": "Primeira consulta",
+    "data": "2026-12-15",
+    "horario": "10:00",
+    "email": "maria@email.com",
+    "telefone": "(11) 99999-9999",
+    "observacoes": "Preferência pelo período da manhã.",
+    "criadoEm": "2026-09-17 22:31:34"
+  }
+]
+```
+
+---
+
+### 3️⃣ `POST /api/pre-avaliacao`
+
+Salva o formulário completo de pré-avaliação. O corpo é um **objeto JSON livre** (as respostas são serializadas e armazenadas na coluna `respostas`).
+
+**Regras:**
+
+- O corpo deve ser um objeto JSON **não vazio** (arrays são rejeitados).
+- Máximo de **200 campos** por payload.
+
+**Exemplo:**
 
 ```bash
 curl -X POST http://localhost:3000/api/pre-avaliacao \
   -H "Content-Type: application/json" \
-  -d '{ "nomeCompleto": "Maria Silva", "motivo": "Consulta de rotina" }'
+  -d '{
+    "nomeCompleto": "Maria Silva",
+    "email": "maria@email.com",
+    "motivo": "Consulta de rotina",
+    "nivelEstresse": "5"
+  }'
 ```
 
-**Resposta (`201 Created`):**
+**Resposta `201 Created`:**
 
 ```json
 {
   "id": 1,
   "respostas": {
     "nomeCompleto": "Maria Silva",
-    "motivo": "Consulta de rotina"
+    "email": "maria@email.com",
+    "motivo": "Consulta de rotina",
+    "nivelEstresse": "5"
   },
-  "criadoEm": "2026-08-27T12:00:00.000Z"
+  "criadoEm": "2026-09-17T22:31:43.977Z"
 }
 ```
+
+**Resposta `400 Bad Request`:**
+
+```json
+{ "error": "É necessário enviar um objeto JSON com as respostas" }
+```
+
+---
+
+### 4️⃣ `GET /api/pre-avaliacao`
+
+Lista as pré-avaliações salvas, ordenadas por `criadoEm` e `id` (decrescente). O campo `respostas` é **convertido de volta para objeto** automaticamente.
+
+**Exemplo:**
+
+```bash
+curl http://localhost:3000/api/pre-avaliacao
+```
+
+**Resposta `200 OK`:**
+
+```json
+[
+  {
+    "id": 1,
+    "respostas": {
+      "nomeCompleto": "Maria Silva",
+      "email": "maria@email.com",
+      "motivo": "Consulta de rotina",
+      "nivelEstresse": "5"
+    },
+    "criadoEm": "2026-09-17 22:31:43"
+  }
+]
+```
+
+---
+
+### 5️⃣ `GET /api/horarios-ocupados`
+
+Retorna os horários já ocupados em uma data específica — usado pelo calendário de agendamento para desabilitar slots indisponíveis.
+
+**Query params:**
+
+| Parâmetro | Obrigatório | Descrição |
+|---|---|---|
+| `data` | ✅ | Data no formato `YYYY-MM-DD` |
+
+**Exemplo:**
+
+```bash
+curl "http://localhost:3000/api/horarios-ocupados?data=2026-12-15"
+```
+
+**Resposta `200 OK`:**
+
+```json
+{
+  "data": "2026-12-15",
+  "ocupados": ["10:00"]
+}
+```
+
+**Resposta `400 Bad Request` (parâmetro ausente/inválido):**
+
+```json
+{ "error": "Parâmetro data é obrigatório (formato YYYY-MM-DD)" }
+```
+
+---
+
+### ❌ Respostas de Erro Gerais
+
+| Status | Corpo | Quando ocorre |
+|---|---|---|
+| `400` | `{ "error": "...", "detalhes": [...] }` | Falha de validação de entrada |
+| `404` | `{ "error": "Rota não encontrada" }` | Rota inexistente |
+| `429` | `{ "error": "Muitas requisições. Tente novamente mais tarde." }` | Rate limit excedido |
+| `500` | `{ "error": "Erro ao ..." }` | Falha interna (ex.: erro no banco) |
+
+---
 
 ### 🌍 Variáveis de ambiente
 
@@ -303,11 +541,13 @@ curl -X POST http://localhost:3000/api/pre-avaliacao \
 | Medida | Onde | Descrição |
 |---|---|---|
 | **Helmet** | `server.js` | Headers HTTP de segurança (`X-Content-Type-Options`, `X-Frame-Options`, CSP, etc.) |
+| **`x-powered-by` desativado** | `server.js` | Remove o header que expõe o uso do Express |
 | **Rate limiting** | `server.js` | Limite de 100 requisições por IP a cada 15 min nas rotas `/api/*` |
-| **CORS configurável** | `server.js` | Allowlist via `ALLOWED_ORIGINS`; sem a variável, permite apenas `localhost`/`file://` |
+| **CORS configurável** | `server.js` | Allowlist via `ALLOWED_ORIGINS`; sem a variável, permite apenas `localhost`/`127.0.0.1` e `file://` |
 | **Limite de corpo** | `server.js` | Corpo JSON limitado a 100 KB |
 | **Validação de entrada** | `server.js` | Tamanho máximo e formato de data/horário/e-mail validados no servidor |
-| **Queries parametrizadas** | `database.js` | Previne injeção de SQL |
+| **Limite de campos** | `server.js` | Pré-avaliação aceita no máximo 200 campos |
+| **Queries parametrizadas** | `server.js` | Previne injeção de SQL |
 | **Escape de saída** | `agendar.html`, `pre-avaliacao.html` | Dados do usuário renderizados via `textContent`/DOM (evita XSS) |
 
 > 🌐 **CORS em produção:** defina a variável de ambiente `ALLOWED_ORIGINS` com os domínios permitidos:
@@ -315,6 +555,8 @@ curl -X POST http://localhost:3000/api/pre-avaliacao \
 > ```bash
 > ALLOWED_ORIGINS="https://meudominio.com,https://www.meudominio.com" npm start
 > ```
+
+> ⚠️ **Limitações conhecidas (contexto educacional):** não há autenticação/autorização, as rotas `GET` são públicas e as credenciais do EmailJS ficam expostas no cliente. Em um cenário real, seria necessário adicionar autenticação, um proxy para o EmailJS e um painel administrativo protegido.
 
 ---
 
@@ -335,11 +577,50 @@ open index.html
 # ou arraste o arquivo para o navegador
 ```
 
+> 💡 **Dica:** para que o agendamento e a pré-avaliação persistam dados, o backend precisa estar rodando em `http://localhost:3000`. Sem ele, o front-end ainda funciona, mas o envio falhará na etapa de persistência.
+
+---
+
+## 🧪 Testes Manuais da API
+
+Com o backend rodando, valide as rotas rapidamente:
+
+```bash
+# 1. Criar agendamento (espera 201)
+curl -X POST http://localhost:3000/api/agendamentos \
+  -H "Content-Type: application/json" \
+  -d '{"nomeCliente":"Teste","servico":"Retorno","data":"2026-12-20","horario":"09:00"}'
+
+# 2. Listar agendamentos (espera 200)
+curl http://localhost:3000/api/agendamentos
+
+# 3. Consultar horários ocupados (espera 200)
+curl "http://localhost:3000/api/horarios-ocupados?data=2026-12-20"
+
+# 4. Salvar pré-avaliação (espera 201)
+curl -X POST http://localhost:3000/api/pre-avaliacao \
+  -H "Content-Type: application/json" \
+  -d '{"nomeCompleto":"Teste","motivo":"Rotina"}'
+
+# 5. Listar pré-avaliações (espera 200)
+curl http://localhost:3000/api/pre-avaliacao
+
+# 6. Testar validação (espera 400)
+curl -X POST http://localhost:3000/api/agendamentos \
+  -H "Content-Type: application/json" \
+  -d '{"nomeCliente":"","servico":"","data":"2020-01-01","horario":"99:99"}'
+
+# 7. Testar rota inexistente (espera 404)
+curl http://localhost:3000/api/rota-inexistente
+```
+
+> ✅ Todas as rotas acima foram **validadas manualmente** durante o desenvolvimento deste README.
+
 ---
 
 ## 👥 Equipe
 
-Projeto acadêmico — Disciplina de **Engenharia de Software**.
+Projeto acadêmico — Disciplina de **Engenharia de Software** (6º período).
 
 | Membro | Matrícula |
 |---|---|
@@ -354,5 +635,7 @@ Projeto acadêmico — Disciplina de **Engenharia de Software**.
 <div align="center">
 
 Feito com 💜 para o **Consultório Ramos** · *Endocrinologia, Metabologia e Menopausa*
+
+**Projeto educacional — sem fins comerciais.**
 
 </div>
