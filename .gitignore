@@ -9,6 +9,9 @@ node_modules/
 *.db-shm
 *.db-wal
 
+# Logs
+*.log
+
 # Sistema operacional
 .DS_Store
 Thumbs.db

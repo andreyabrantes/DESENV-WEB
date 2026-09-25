@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cancelar Consulta – Consultório Ramos</title>
+  <meta name="description" content="Cancele sua consulta agendada no Consultório Ramos. O horário será liberado automaticamente para outros pacientes." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="agendar.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <!-- Backend API helpers -->
+  <script src="api.js"></script>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">🌿 Consultório Ramos</div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="index.html#servicos">Serviços</a></li>
+      <li><a href="agendar.html">Agendar</a></li>
+      <li><a href="pre-avaliacao.html">Pré-Avaliação</a></li>
+    </ul>
+    <a href="agendar.html" class="btn-nav">Agendar Consulta</a>
+    <button class="hamburger" id="hamburger" aria-label="Abrir menu">&#9776;</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="agendar-hero">
+    <div class="hero-blob blob1"></div>
+    <div class="hero-blob blob2"></div>
+    <div class="hero-blob blob3"></div>
+    <div class="agendar-hero-content">
+      <span class="badge"><span class="badge-dot"></span> Cancelamento de consulta</span>
+      <h1>Cancelar <span class="highlight">consulta</span></h1>
+      <p class="hero-tagline">Confirme abaixo para liberar o horário reservado.</p>
+    </div>
+  </section>
+
+  <!-- CANCELAMENTO -->
+  <section class="agendar-section visible">
+    <div class="agendar-grid" style="grid-template-columns: 1fr; max-width: 640px; margin: 0 auto;">
+      <div class="form-card">
+        <h3>Detalhes do agendamento</h3>
+
+        <div class="booking-summary empty" id="cancelSummary">
+          ⏳ Carregando informações do agendamento...
+        </div>
+
+        <div id="cancelActions" style="margin-top: 1.5rem;">
+          <p style="margin-bottom: 1rem; color: #555;">
+            Ao confirmar, o horário será <strong>liberado imediatamente</strong> e poderá ser
+            reservado por outro paciente. Esta ação não pode ser desfeita.
+          </p>
+          <button type="button" class="btn-submit" id="confirmBtn" onclick="confirmarCancelamento()">
+            <span id="confirmLabel">Confirmar cancelamento</span>
+            <span id="confirmSpinner" class="btn-spinner" style="display:none">
+              <span class="spinner"></span> Cancelando...
+            </span>
+          </button>
+        </div>
+
+        <div id="cancelFeedback" style="display:none; margin-top: 1.5rem;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Consultório Ramos · Todos os direitos reservados</p>
+    <p>📍 Rua das Flores, 123 · São Paulo, SP &nbsp;|&nbsp; 📞 (00) 00000-0000</p>
+  </footer>
+
+  <script>
+    // ── Hamburger ──
+    const hamburger = document.getElementById('hamburger');
+    const navLinks  = document.getElementById('navLinks');
+    if (hamburger && navLinks) {
+      hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('nav-open');
+        hamburger.classList.toggle('active');
+      });
+      document.addEventListener('click', (e) => {
+        if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+          navLinks.classList.remove('nav-open');
+          hamburger.classList.remove('active');
+        }
+      });
+    }
+
+    // ── Estado ──
+    const params = new URLSearchParams(window.location.search);
+    const token  = (params.get('token') || '').trim();
+
+    const summaryEl  = document.getElementById('cancelSummary');
+    const actionsEl  = document.getElementById('cancelActions');
+    const feedbackEl = document.getElementById('cancelFeedback');
+    const confirmBtn = document.getElementById('confirmBtn');
+
+    function showFeedback(mensagem, tipo) {
+      feedbackEl.replaceChildren();
+      feedbackEl.style.display = 'block';
+      feedbackEl.style.padding = '1rem';
+      feedbackEl.style.borderRadius = '8px';
+      feedbackEl.style.background = tipo === 'erro' ? '#fdecea' : '#e8f5e9';
+      feedbackEl.style.color      = tipo === 'erro' ? '#b71c1c' : '#1b5e20';
+      feedbackEl.textContent = mensagem;
+    }
+
+    function setLoading(on) {
+      const label   = document.getElementById('confirmLabel');
+      const spinner = document.getElementById('confirmSpinner');
+      confirmBtn.disabled       = on;
+      label.style.display       = on ? 'none'   : 'inline';
+      spinner.style.display     = on ? 'inline' : 'none';
+    }
+
+    // Formata "YYYY-MM-DD" em uma data legível em pt-BR, sem deslocamento de fuso.
+    function formatarData(iso) {
+      const [ano, mes, dia] = iso.split('-').map(Number);
+      const d = new Date(ano, mes - 1, dia);
+      return d.toLocaleDateString('pt-BR', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+      });
+    }
+
+    async function confirmarCancelamento() {
+      setLoading(true);
+      try {
+        const data = await getJSON(`/api/cancelar/${encodeURIComponent(token)}`);
+        summaryEl.textContent = '✅ Consulta cancelada';
+        summaryEl.classList.remove('empty');
+        actionsEl.style.display = 'none';
+        showFeedback(
+          `${data.mensagem} (${formatarData(data.agendamento.data)} às ${data.agendamento.horario})`,
+          'sucesso'
+        );
+      } catch (err) {
+        showFeedback(err.message || 'Não foi possível cancelar o agendamento.', 'erro');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function init() {
+      if (!token) {
+        summaryEl.textContent = '⚠️ Link de cancelamento inválido ou incompleto.';
+        summaryEl.classList.remove('empty');
+        actionsEl.style.display = 'none';
+        return;
+      }
+
+      summaryEl.textContent =
+        'Clique em "Confirmar cancelamento" para liberar o horário reservado.';
+      summaryEl.classList.remove('empty');
+      // O botão já está visível no HTML e usa onclick inline; aqui apenas
+      // garantimos que o card esteja exibido caso o CSS o tenha ocultado.
+      actionsEl.style.display = 'block';
+    }
+
+    // Garante que o DOM já esteja pronto antes de manipular os elementos.
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+
+</body>
+</html>

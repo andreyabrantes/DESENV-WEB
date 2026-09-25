@@ -347,7 +347,7 @@
 
       try {
         // 1) Persiste o agendamento no banco via API (novo).
-        await postJSON('/api/agendamentos', {
+        const agendamento = await postJSON('/api/agendamentos', {
           nomeCliente: nome,
           servico:     tipo,
           data:        toISODate(d),
@@ -359,18 +359,26 @@
 
         state.taken.add(state.selectedSlot);
 
+        // Link de cancelamento: usa a URL absoluta do backend (http://), pois
+        // clientes de e-mail bloqueiam links file:// (não clicáveis).
+        // O token identifica o agendamento de forma única e segura.
+        const cancelUrl = new URL('/cancelar.html', API_BASE);
+        cancelUrl.searchParams.set('token', agendamento.token);
+
         // 2) Envia o e-mail de confirmação (fallback já existente).
         try {
           await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-            to_name:    nome,
-            to_email:   email,
-            telefone:   telefone,
-            tipo:       tipo,
-            data:       dataFmt,
-            data_curta: d.toLocaleDateString('pt-BR', { day:'numeric', month:'long' }),
-            dia_semana: diaSemana,
-            horario:    state.selectedSlot,
-            obs:        obs || 'Nenhuma observação informada.',
+            to_name:      nome,
+            to_email:     email,
+            telefone:     telefone,
+            tipo:         tipo,
+            data:         dataFmt,
+            data_curta:   d.toLocaleDateString('pt-BR', { day:'numeric', month:'long' }),
+            dia_semana:   diaSemana,
+            horario:      state.selectedSlot,
+            obs:          obs || 'Nenhuma observação informada.',
+            cancel_link:  cancelUrl.toString(),
+            cancel_token: agendamento.token,
           });
         } catch (emailErr) {
           console.warn('EmailJS falhou, mas o agendamento foi salvo:', emailErr);

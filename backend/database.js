@@ -30,6 +30,8 @@ db.serialize(() => {
       email       TEXT,
       telefone    TEXT,
       observacoes TEXT,
+      token       TEXT    UNIQUE,
+      status      TEXT    NOT NULL DEFAULT 'ativo',
       criadoEm    DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
@@ -51,6 +53,8 @@ function migrateAgendamentos() {
     email: 'TEXT',
     telefone: 'TEXT',
     observacoes: 'TEXT',
+    token: 'TEXT',
+    status: "TEXT NOT NULL DEFAULT 'ativo'",
   };
 
   db.all('PRAGMA table_info(agendamentos)', [], (err, colunas) => {
@@ -67,6 +71,15 @@ function migrateAgendamentos() {
         });
       }
     }
+
+    // O índice só pode ser criado depois que a coluna `token` existe
+    // (bancos antigos recebem a coluna via ALTER TABLE acima).
+    db.run(
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_agendamentos_token ON agendamentos(token)',
+      (e) => {
+        if (e) console.error('Erro ao criar índice de token:', e.message);
+      }
+    );
   });
 }
 
