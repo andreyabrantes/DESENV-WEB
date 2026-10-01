@@ -767,7 +767,7 @@ curl "http://localhost:3000/api/cancelar/SEU_TOKEN_AQUI"
 
 ## 👥 Equipe
 
-Projeto acadêmico — Disciplina de **Engenharia de Software** (6º período).
+Projeto acadêmico — Disciplina de **DESENVOLVIMENTO WEB** (6º período).
 
 | Membro | Matrícula |
 |---|---|
@@ -781,7 +781,7 @@ Projeto acadêmico — Disciplina de **Engenharia de Software** (6º período).
 
 <div align="center">
 
-Feito com 💜 para o **Consultório Ramos** · *Endocrinologia, Metabologia e Menopausa*
+**Consultório Ramos** · *Endocrinologia, Metabologia e Menopausa*
 
 **Projeto educacional — sem fins comerciais.**
 
