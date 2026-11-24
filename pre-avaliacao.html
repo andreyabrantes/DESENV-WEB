@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pré-Avaliação – Consultório Ramos</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E" />
   <meta name="description" content="Preencha sua pré-avaliação antes da consulta com a Dra. Fernanda Ramos. Nos ajude a conhecer melhor seu histórico de saúde." />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="pre-avaliacao.css" />
@@ -268,7 +269,7 @@
 
   <!-- FOOTER -->
   <footer>
-    <p>© 2026 Consultório Ramos · Todos os direitos reservados</p>
+    <p>© 2026 Consultório Ramos · Todos os direitos reservados · <a href="cancelar.html" style="color:inherit">Cancelar consulta</a> · <a href="admin.html" style="color:inherit">Área restrita</a></p>
     <p>📍 Rua das Flores, 123 · São Paulo, SP &nbsp;|&nbsp; 📞 (00) 00000-0000</p>
   </footer>
 
@@ -410,7 +411,9 @@
     const EMAILJS_SERVICE_ID  = 'service_j3r3arh';
     const EMAILJS_TEMPLATE_ID = 'template_ka5uizn';
 
-    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    // se o emailjs nao carregar a pagina continua funcionando
+    const emailjsDisponivel = typeof window.emailjs !== 'undefined';
+    if (emailjsDisponivel) emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
     // ── Submit ──
     document.getElementById('submitBtn').addEventListener('click', async () => {
@@ -478,6 +481,7 @@
 
         // 2) Envia o e-mail (fallback já existente).
         try {
+          if (!emailjsDisponivel) throw new Error('EmailJS indisponível');
           await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
             to_name: nome, to_email: email, telefone, data_nasc: dataNasc,
             sexo, cpf, peso, altura, convenio, motivo, doencas, alergias,

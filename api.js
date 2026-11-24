@@ -1,39 +1,45 @@
-// api.js
-// Helpers de integração entre o front-end e o back-end local (Express + SQLite).
-// Carregado por agendar.html e pre-avaliacao.html.
+const API_BASE = /^https?:$/.test(window.location.protocol)
+  ? window.location.origin
+  : 'http://localhost:3000';
 
-const API_BASE = 'http://localhost:3000';
+class ApiError extends Error {
+  constructor(mensagem, status, data) {
+    super(mensagem);
+    this.status = status;
+    this.data = data;
+  }
+}
 
-// Envia um POST JSON e lança erro com mensagem amigável se a resposta não for 2xx.
-async function postJSON(url, payload) {
-  const res = await fetch(`${API_BASE}${url}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+async function requestJSON(url, { method = 'GET', body, headers = {} } = {}) {
+  const opts = { method, headers: { ...headers } };
+  if (body !== undefined) {
+    opts.headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(body);
+  }
+
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${url}`, opts);
+  } catch (e) {
+    throw new ApiError('Não foi possível conectar ao servidor. Verifique se o backend está rodando.', 0);
+  }
 
   const data = await res.json().catch(() => ({}));
-
   if (!res.ok) {
     const detalhes = Array.isArray(data.detalhes) ? ` (${data.detalhes.join('; ')})` : '';
-    throw new Error(`${data.error || 'Erro inesperado no servidor'}${detalhes}`);
+    throw new ApiError(`${data.error || 'Erro inesperado no servidor'}${detalhes}`, res.status, data);
   }
-
   return data;
 }
 
-async function getJSON(url) {
-  const res = await fetch(`${API_BASE}${url}`);
-  const data = await res.json().catch(() => ({}));
-
-  if (!res.ok) {
-    throw new Error(data.error || 'Erro inesperado no servidor');
-  }
-
-  return data;
+function postJSON(url, payload) {
+  return requestJSON(url, { method: 'POST', body: payload });
 }
 
-// Converte um Date em "YYYY-MM-DD" sem deslocamento de fuso horário.
+function getJSON(url) {
+  return requestJSON(url);
+}
+
 function toISODate(date) {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0');

@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cancelar Consulta – Consultório Ramos</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E" />
   <meta name="description" content="Cancele sua consulta agendada no Consultório Ramos. O horário será liberado automaticamente para outros pacientes." />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="agendar.css" />
@@ -35,12 +36,11 @@
     <div class="agendar-hero-content">
       <span class="badge"><span class="badge-dot"></span> Cancelamento de consulta</span>
       <h1>Cancelar <span class="highlight">consulta</span></h1>
-      <p class="hero-tagline">Confirme abaixo para liberar o horário reservado.</p>
+      <p class="hero-tagline" id="heroTagline">Confirme abaixo para liberar o horário reservado.</p>
     </div>
   </section>
 
-  <!-- CANCELAMENTO -->
-  <section class="agendar-section visible">
+  <section class="agendar-section visible" id="secLink">
     <div class="agendar-grid" style="grid-template-columns: 1fr; max-width: 640px; margin: 0 auto;">
       <div class="form-card">
         <h3>Detalhes do agendamento</h3>
@@ -49,7 +49,7 @@
           ⏳ Carregando informações do agendamento...
         </div>
 
-        <div id="cancelActions" style="margin-top: 1.5rem;">
+        <div id="cancelActions" style="display:none; margin-top: .5rem;">
           <p style="margin-bottom: 1rem; color: #555;">
             Ao confirmar, o horário será <strong>liberado imediatamente</strong> e poderá ser
             reservado por outro paciente. Esta ação não pode ser desfeita.
@@ -62,14 +62,40 @@
           </button>
         </div>
 
-        <div id="cancelFeedback" style="display:none; margin-top: 1.5rem;"></div>
+        <div id="cancelFeedback" style="display:none; margin-top: .5rem;"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="agendar-section visible" id="secWhats" hidden>
+    <div class="agendar-grid" style="grid-template-columns: 1fr; max-width: 640px; margin: 0 auto;">
+      <div class="form-card">
+        <h3>💬 Cancelar pelo WhatsApp</h3>
+        <p style="color: #555; font-size: .9rem; line-height: 1.6;">
+          Digite o <strong>código de 6 caracteres</strong> que apareceu na confirmação do agendamento.
+          Vamos abrir o WhatsApp do consultório com a mensagem pronta e a recepção confirma o cancelamento.
+        </p>
+        <form id="whatsForm" novalidate>
+          <div class="form-group">
+            <label for="codigoInput">Código de cancelamento</label>
+            <input type="text" id="codigoInput" class="whats-code-input" maxlength="6"
+                   autocomplete="off" placeholder="ABC234" required />
+          </div>
+          <p id="whatsErro" style="display:none; color:#b71c1c; font-size:.85rem; margin:.6rem 0 0;"></p>
+          <button type="submit" class="btn-whats" style="margin-top: 1rem; border: none; cursor: pointer;">
+            💬 Abrir WhatsApp do consultório
+          </button>
+        </form>
+        <p style="color: #777; font-size: .8rem;">
+          Tem o e-mail de confirmação? Use o botão <strong>“Cancelar consulta”</strong> do e-mail para cancelar na hora, sem esperar a recepção.
+        </p>
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
-    <p>© 2026 Consultório Ramos · Todos os direitos reservados</p>
+    <p>© 2026 Consultório Ramos · Todos os direitos reservados · <a href="cancelar.html" style="color:inherit">Cancelar consulta</a> · <a href="admin.html" style="color:inherit">Área restrita</a></p>
     <p>📍 Rua das Flores, 123 · São Paulo, SP &nbsp;|&nbsp; 📞 (00) 00000-0000</p>
   </footer>
 
@@ -100,7 +126,6 @@
     const confirmBtn = document.getElementById('confirmBtn');
 
     function showFeedback(mensagem, tipo) {
-      feedbackEl.replaceChildren();
       feedbackEl.style.display = 'block';
       feedbackEl.style.padding = '1rem';
       feedbackEl.style.borderRadius = '8px';
@@ -110,28 +135,48 @@
     }
 
     function setLoading(on) {
-      const label   = document.getElementById('confirmLabel');
-      const spinner = document.getElementById('confirmSpinner');
-      confirmBtn.disabled       = on;
-      label.style.display       = on ? 'none'   : 'inline';
-      spinner.style.display     = on ? 'inline' : 'none';
+      document.getElementById('confirmLabel').style.display   = on ? 'none'   : 'inline';
+      document.getElementById('confirmSpinner').style.display = on ? 'inline' : 'none';
+      confirmBtn.disabled = on;
     }
 
     // Formata "YYYY-MM-DD" em uma data legível em pt-BR, sem deslocamento de fuso.
     function formatarData(iso) {
       const [ano, mes, dia] = iso.split('-').map(Number);
-      const d = new Date(ano, mes - 1, dia);
-      return d.toLocaleDateString('pt-BR', {
+      return new Date(ano, mes - 1, dia).toLocaleDateString('pt-BR', {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
       });
+    }
+
+    function mostrarResumo(ag) {
+      summaryEl.classList.remove('empty');
+      summaryEl.textContent =
+        `📅 ${formatarData(ag.data)} às ${ag.horario} · ${ag.servico} · ${ag.nomeCliente}`;
+    }
+
+    async function carregar() {
+      try {
+        const { agendamento, podeCancelar } = await getJSON(`/api/cancelar/${encodeURIComponent(token)}`);
+        mostrarResumo(agendamento);
+        if (agendamento.status === 'cancelado') {
+          showFeedback('Este agendamento já foi cancelado anteriormente. O horário está livre.', 'erro');
+        } else if (!podeCancelar) {
+          showFeedback('Esta consulta já aconteceu e não pode mais ser cancelada.', 'erro');
+        } else {
+          actionsEl.style.display = 'block';
+        }
+      } catch (err) {
+        summaryEl.classList.remove('empty');
+        summaryEl.textContent = '⚠️ Não foi possível carregar o agendamento.';
+        showFeedback(err.message, 'erro');
+      }
     }
 
     async function confirmarCancelamento() {
       setLoading(true);
       try {
-        const data = await getJSON(`/api/cancelar/${encodeURIComponent(token)}`);
+        const data = await postJSON(`/api/cancelar/${encodeURIComponent(token)}`, {});
         summaryEl.textContent = '✅ Consulta cancelada';
-        summaryEl.classList.remove('empty');
         actionsEl.style.display = 'none';
         showFeedback(
           `${data.mensagem} (${formatarData(data.agendamento.data)} às ${data.agendamento.horario})`,
@@ -144,23 +189,48 @@
       }
     }
 
-    function init() {
-      if (!token) {
-        summaryEl.textContent = '⚠️ Link de cancelamento inválido ou incompleto.';
-        summaryEl.classList.remove('empty');
-        actionsEl.style.display = 'none';
-        return;
+    // whatsapp
+    let whatsappConsultorio = null;
+    async function iniciarWhatsApp() {
+      document.getElementById('secLink').hidden = true;
+      document.getElementById('secWhats').hidden = false;
+      document.getElementById('heroTagline').textContent = 'Sem o link do e-mail? Peça o cancelamento pelo WhatsApp com o seu código.';
+      try {
+        ({ whatsapp: whatsappConsultorio } = await getJSON('/api/config'));
+      } catch (e) {
+        whatsappConsultorio = null;
       }
-
-      summaryEl.textContent =
-        'Clique em "Confirmar cancelamento" para liberar o horário reservado.';
-      summaryEl.classList.remove('empty');
-      // O botão já está visível no HTML e usa onclick inline; aqui apenas
-      // garantimos que o card esteja exibido caso o CSS o tenha ocultado.
-      actionsEl.style.display = 'block';
     }
 
-    // Garante que o DOM já esteja pronto antes de manipular os elementos.
+    const codigoInput = document.getElementById('codigoInput');
+    codigoInput.addEventListener('input', () => {
+      codigoInput.value = codigoInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+    });
+
+    document.getElementById('whatsForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const erro = document.getElementById('whatsErro');
+      const codigo = codigoInput.value;
+      if (!/^[A-Z0-9]{6}$/.test(codigo)) {
+        erro.textContent = 'O código tem 6 letras/números (ex.: ABC234).';
+        erro.style.display = 'block';
+        return;
+      }
+      if (!whatsappConsultorio) {
+        erro.textContent = 'Não foi possível obter o WhatsApp do consultório. Ligue para (00) 00000-0000.';
+        erro.style.display = 'block';
+        return;
+      }
+      erro.style.display = 'none';
+      const texto = `Olá! Gostaria de cancelar minha consulta no Consultório Ramos.\nCódigo: ${codigo}`;
+      window.open(`https://wa.me/${whatsappConsultorio}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+    });
+
+    function init() {
+      if (token) carregar();
+      else iniciarWhatsApp();
+    }
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
