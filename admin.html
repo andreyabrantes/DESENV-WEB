@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Painel Administrativo – Consultório Ramos</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="api.js"></script>
+  <script src="admin.js" defer></script>
+</head>
+<body class="admin-body">
+
+  <main class="auth-wrap" id="telaAcesso" hidden>
+    <div class="auth-card">
+      <a href="index.html" class="auth-logo">🌿 Consultório Ramos</a>
+      <h1 id="acessoTitulo">Área restrita</h1>
+      <p class="auth-sub" id="acessoSub">Entre com sua conta de administrador.</p>
+
+      <form id="formAcesso" novalidate>
+        <div class="campo" id="campoNome" hidden>
+          <label for="acNome">Nome</label>
+          <input id="acNome" type="text" autocomplete="name" maxlength="120" />
+        </div>
+        <div class="campo">
+          <label for="acEmail">E-mail</label>
+          <input id="acEmail" type="email" autocomplete="username" required />
+        </div>
+        <div class="campo">
+          <label for="acSenha">Senha</label>
+          <input id="acSenha" type="password" autocomplete="current-password" minlength="8" required />
+        </div>
+        <p class="msg-erro" id="acessoErro" hidden></p>
+        <button class="btn btn-primario btn-largo" type="submit" id="acessoBtn">Entrar</button>
+      </form>
+      <a href="index.html" class="auth-voltar">← Voltar ao site</a>
+    </div>
+  </main>
+
+  <div id="telaPainel" hidden>
+    <header class="adm-topo">
+      <a href="index.html" class="adm-logo">🌿 Consultório Ramos <span>Admin</span></a>
+      <nav class="adm-abas" role="tablist" aria-label="Seções do painel">
+        <button role="tab" class="aba ativa" data-aba="agendamentos" aria-selected="true">Agendamentos</button>
+        <button role="tab" class="aba" data-aba="whatsapp" aria-selected="false">WhatsApp</button>
+        <button role="tab" class="aba" data-aba="pre" aria-selected="false">Pré-avaliações</button>
+        <button role="tab" class="aba" data-aba="usuarios" aria-selected="false">Administradores</button>
+      </nav>
+      <div class="adm-usuario">
+        <span id="nomeAdmin"></span>
+        <button class="btn btn-fantasma btn-pequeno" id="btnSair">Sair</button>
+      </div>
+    </header>
+
+    <main class="adm-main">
+      <section class="stats" aria-label="Resumo">
+        <div class="stat"><span class="stat-num" id="stHoje">–</span><span class="stat-rot">Consultas hoje</span></div>
+        <div class="stat"><span class="stat-num" id="stProximos">–</span><span class="stat-rot">Próximas (ativas)</span></div>
+        <div class="stat"><span class="stat-num" id="stCancelados">–</span><span class="stat-rot">Canceladas</span></div>
+        <div class="stat"><span class="stat-num" id="stPre">–</span><span class="stat-rot">Pré-avaliações</span></div>
+      </section>
+
+      <section class="painel" data-painel="agendamentos">
+        <div class="painel-cab">
+          <h2>Agendamentos</h2>
+          <button class="btn btn-primario" id="btnNovo">+ Nova consulta</button>
+        </div>
+
+        <form class="filtros" id="formFiltros">
+          <div class="campo">
+            <label for="fPeriodo">Período</label>
+            <select id="fPeriodo">
+              <option value="proximos">Próximos</option>
+              <option value="hoje">Hoje</option>
+              <option value="semana">Próximos 7 dias</option>
+              <option value="passados">Passados</option>
+              <option value="todos">Todos</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="fStatus">Status</label>
+            <select id="fStatus">
+              <option value="">Todos</option>
+              <option value="ativo" selected>Ativos</option>
+              <option value="cancelado">Cancelados</option>
+            </select>
+          </div>
+          <div class="campo campo-busca">
+            <label for="fBusca">Buscar</label>
+            <input id="fBusca" type="search" placeholder="Nome, e-mail, telefone ou código" />
+          </div>
+        </form>
+
+        <div class="tabela-wrap">
+          <table class="tabela">
+            <thead>
+              <tr>
+                <th>Data</th><th>Hora</th><th>Paciente</th><th>Contato</th>
+                <th>Tipo</th><th>Código</th><th>Status</th><th class="col-acoes">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbAgendamentos"></tbody>
+          </table>
+          <p class="vazio" id="vazioAgend" hidden>Nenhum agendamento encontrado com esses filtros.</p>
+        </div>
+      </section>
+
+      <section class="painel" data-painel="whatsapp" hidden>
+        <div class="painel-cab"><h2>Cancelamento via WhatsApp</h2></div>
+        <div class="grade-2">
+          <div class="cartao">
+            <h3>1. Paciente pediu para cancelar?</h3>
+            <p class="texto-ajuda">
+              O paciente envia no WhatsApp do consultório uma mensagem com o <strong>código de 6 caracteres</strong>
+              mostrado na confirmação do agendamento. Digite o código abaixo para localizar a consulta.
+            </p>
+            <form id="formCodigo" class="linha-form" novalidate>
+              <input id="inCodigo" class="input-codigo" maxlength="6" placeholder="ABC234" autocomplete="off" aria-label="Código de cancelamento" />
+              <button class="btn btn-primario" type="submit">Buscar</button>
+            </form>
+            <p class="msg-erro" id="codigoErro" hidden></p>
+            <div id="codigoResultado"></div>
+          </div>
+          <div class="cartao cartao-suave">
+            <h3>Como funciona</h3>
+            <ol class="passos">
+              <li>Ao agendar, o paciente recebe um <strong>código</strong> e um botão <em>“Cancelar pelo WhatsApp”</em> (também em <code>cancelar.html</code>).</li>
+              <li>O botão abre o WhatsApp do consultório com a mensagem pronta, contendo o código.</li>
+              <li>A recepção busca o código aqui e confirma o cancelamento: o horário é liberado na hora.</li>
+              <li>Clique em <strong>“Avisar no WhatsApp”</strong> para responder ao paciente com a confirmação.</li>
+            </ol>
+            <p class="texto-ajuda">Número configurado: <strong id="numWhats">–</strong></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="painel" data-painel="pre" hidden>
+        <div class="painel-cab">
+          <h2>Pré-avaliações</h2>
+          <input id="fBuscaPre" type="search" class="busca-solta" placeholder="Filtrar por nome ou e-mail" aria-label="Filtrar pré-avaliações" />
+        </div>
+        <div id="listaPre" class="lista-pre"></div>
+        <p class="vazio" id="vazioPre" hidden>Nenhuma pré-avaliação recebida ainda.</p>
+      </section>
+
+      <section class="painel" data-painel="usuarios" hidden>
+        <div class="painel-cab"><h2>Administradores</h2></div>
+        <div class="grade-2">
+          <div class="cartao">
+            <h3>Contas com acesso</h3>
+            <ul id="listaUsuarios" class="lista-usuarios"></ul>
+          </div>
+          <div class="cartao">
+            <h3>Cadastrar novo administrador</h3>
+            <form id="formUsuario" novalidate>
+              <div class="campo"><label for="uNome">Nome</label><input id="uNome" maxlength="120" required /></div>
+              <div class="campo"><label for="uEmail">E-mail</label><input id="uEmail" type="email" required /></div>
+              <div class="campo"><label for="uSenha">Senha (mín. 8 caracteres)</label><input id="uSenha" type="password" minlength="8" autocomplete="new-password" required /></div>
+              <p class="msg-erro" id="usuarioErro" hidden></p>
+              <button class="btn btn-primario" type="submit">Cadastrar</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-fundo" id="modalNovo" hidden>
+    <div class="modal-caixa" role="dialog" aria-modal="true" aria-labelledby="tituloNovo">
+      <div class="modal-cab">
+        <h2 id="tituloNovo">Nova consulta</h2>
+        <button class="btn-fechar" data-fechar aria-label="Fechar">✕</button>
+      </div>
+      <form id="formNovo" novalidate>
+        <div class="campo"><label for="nNome">Paciente *</label><input id="nNome" maxlength="120" required /></div>
+        <div class="grade-campos">
+          <div class="campo"><label for="nTelefone">Telefone (WhatsApp)</label><input id="nTelefone" type="tel" placeholder="(11) 98888-7777" /></div>
+          <div class="campo"><label for="nEmail">E-mail</label><input id="nEmail" type="email" /></div>
+        </div>
+        <div class="grade-campos">
+          <div class="campo"><label for="nData">Data *</label><input id="nData" type="date" required /></div>
+          <div class="campo"><label for="nHorario">Horário *</label><select id="nHorario" required><option value="">Escolha a data</option></select></div>
+        </div>
+        <div class="campo"><label for="nServico">Tipo de consulta *</label><select id="nServico" required></select></div>
+        <div class="campo"><label for="nObs">Observações</label><textarea id="nObs" maxlength="500" rows="2"></textarea></div>
+        <p class="msg-erro" id="novoErro" hidden></p>
+        <div class="modal-acoes">
+          <button type="button" class="btn btn-fantasma" data-fechar>Cancelar</button>
+          <button type="submit" class="btn btn-primario">Salvar consulta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-fundo" id="modalConfirma" hidden>
+    <div class="modal-caixa modal-pequeno" role="alertdialog" aria-modal="true" aria-labelledby="confTitulo">
+      <h2 id="confTitulo">Cancelar consulta?</h2>
+      <p id="confTexto"></p>
+      <div class="modal-acoes">
+        <button type="button" class="btn btn-fantasma" data-fechar>Voltar</button>
+        <button type="button" class="btn btn-perigo" id="confOk">Sim, cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

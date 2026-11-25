@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Agendar Consulta – Consultório Ramos</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E" />
   <meta name="description" content="Agende sua consulta online com a Dra. Fernanda Ramos. Escolha o melhor dia e horário para o seu atendimento de forma rápida e segura." />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="agendar.css" />
@@ -124,7 +125,7 @@
 
   <!-- FOOTER -->
   <footer>
-    <p>© 2026 Consultório Ramos · Todos os direitos reservados</p>
+    <p>© 2026 Consultório Ramos · Todos os direitos reservados · <a href="cancelar.html" style="color:inherit">Cancelar consulta</a> · <a href="admin.html" style="color:inherit">Área restrita</a></p>
     <p>📍 Rua das Flores, 123 · São Paulo, SP &nbsp;|&nbsp; 📞 (00) 00000-0000</p>
   </footer>
 
@@ -133,8 +134,16 @@
     <div class="modal">
       <div class="modal-icon">✅</div>
       <h3>Consulta agendada!</h3>
-      <p>Um e-mail de confirmação foi enviado para <strong id="modalEmail"></strong>. Verifique sua caixa de entrada.</p>
+      <p id="modalEmailMsg">Um e-mail de confirmação foi enviado para <strong id="modalEmail"></strong>. Verifique sua caixa de entrada.</p>
       <div class="modal-detail" id="modalDetail"></div>
+      <div class="modal-whats" id="modalWhats" hidden>
+        <p class="modal-whats-title">Precisa cancelar depois?</p>
+        <p class="modal-whats-text">Guarde o seu código de cancelamento:</p>
+        <div class="modal-whats-code" id="modalCodigo"></div>
+        <a class="btn-whats" id="modalWhatsLink" href="#" target="_blank" rel="noopener">
+          💬 Cancelar pelo WhatsApp
+        </a>
+      </div>
       <button class="btn-submit" onclick="closeModal()">Fechar</button>
     </div>
   </div>
@@ -144,7 +153,7 @@
     <div class="modal">
       <div class="modal-icon">⚠️</div>
       <h3>Ops! Algo deu errado.</h3>
-      <p>Não foi possível concluir o agendamento. Verifique sua conexão e tente novamente, ou entre em contato pelo telefone <strong>(00) 00000-0000</strong>.</p>
+      <p id="modalErroMsg">Não foi possível concluir o agendamento. Verifique sua conexão e tente novamente, ou entre em contato pelo telefone <strong>(00) 00000-0000</strong>.</p>
       <button class="btn-submit" onclick="document.getElementById('modalErro').classList.remove('open')">Tentar novamente</button>
     </div>
   </div>
@@ -156,7 +165,9 @@
     const EMAILJS_TEMPLATE_ID = 'template_bdtsohd';
     // ─────────────────────────────────────────────────────────────────────
 
-    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    // se o emailjs nao carregar a pagina continua funcionando
+    const emailjsDisponivel = typeof window.emailjs !== 'undefined';
+    if (emailjsDisponivel) emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
     // ── Hamburger ──
     const hamburger = document.getElementById('hamburger');
@@ -255,6 +266,13 @@
       }
     }
 
+    function slotJaPassou(slot) {
+      if (!state.selectedDate || state.selectedDate.toDateString() !== new Date().toDateString()) return false;
+      const [h, m] = slot.split(':').map(Number);
+      const agora = new Date();
+      return h * 60 + m <= agora.getHours() * 60 + agora.getMinutes();
+    }
+
     function renderSlots() {
       const wrap = document.getElementById('timeSlots');
       const grid = document.getElementById('slotsGrid');
@@ -269,7 +287,7 @@
 
         if (state.slotsStatus === 'loading') {
           btn.disabled = true;
-        } else if (state.taken.has(slot)) {
+        } else if (state.taken.has(slot) || slotJaPassou(slot)) {
           btn.classList.add('taken'); btn.disabled = true;
         } else {
           if (state.selectedSlot === slot) btn.classList.add('selected');
@@ -334,8 +352,17 @@
       const tipo     = document.getElementById('tipo').value;
       const obs      = document.getElementById('obs').value.trim();
 
-      if (!nome || !email || !tipo) {
+      if (!nome || !email || !tipo || !telefone) {
         alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+      }
+      const digitosTel = telefone.replace(/\D/g, '').length;
+      if (digitosTel < 10) {
+        alert('Informe o telefone com DDD (ex.: (11) 98888-7777).');
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Informe um e-mail válido.');
         return;
       }
 
@@ -366,7 +393,9 @@
         cancelUrl.searchParams.set('token', agendamento.token);
 
         // 2) Envia o e-mail de confirmação (fallback já existente).
+        let emailEnviado = false;
         try {
+          if (!emailjsDisponivel) throw new Error('EmailJS indisponível');
           await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
             to_name:      nome,
             to_email:     email,
@@ -379,12 +408,22 @@
             obs:          obs || 'Nenhuma observação informada.',
             cancel_link:  cancelUrl.toString(),
             cancel_token: agendamento.token,
+            codigo:        agendamento.codigo,
+            whatsapp_link: agendamento.whatsappCancelamento,
           });
+          emailEnviado = true;
         } catch (emailErr) {
           console.warn('EmailJS falhou, mas o agendamento foi salvo:', emailErr);
         }
 
-        document.getElementById('modalEmail').textContent  = email;
+        const emailMsg = document.getElementById('modalEmailMsg');
+        if (emailEnviado) {
+          const strongEmail = document.createElement('strong');
+          strongEmail.textContent = email;
+          emailMsg.replaceChildren('Um e-mail de confirmação foi enviado para ', strongEmail, '. Verifique sua caixa de entrada.');
+        } else {
+          emailMsg.textContent = 'Sua consulta está salva. Não conseguimos enviar o e-mail agora, então anote o código abaixo.';
+        }
         const modalDetail = document.getElementById('modalDetail');
         modalDetail.replaceChildren();
         const strongNome = document.createElement('strong');
@@ -398,10 +437,31 @@
           document.createElement('br'),
           `📋 ${tipo}`
         );
+        const whatsBox = document.getElementById('modalWhats');
+        if (agendamento.codigo && agendamento.whatsappCancelamento) {
+          document.getElementById('modalCodigo').textContent = agendamento.codigo;
+          document.getElementById('modalWhatsLink').href = agendamento.whatsappCancelamento;
+          whatsBox.hidden = false;
+        } else {
+          whatsBox.hidden = true;
+        }
+
         document.getElementById('modalOverlay').classList.add('open');
 
       } catch (err) {
         console.error('Erro ao agendar:', err);
+        const msgEl = document.getElementById('modalErroMsg');
+        if (err.status === 409 || err.status === 400) {
+          // se alguem pegou o horario antes recarrega os horarios
+          msgEl.textContent = err.message;
+          if (err.status === 409) {
+            state.selectedSlot = null;
+            await horariosOcupados(state.selectedDate);
+            renderSlots(); updateSummary(); updateSubmit();
+          }
+        } else {
+          msgEl.textContent = 'Não foi possível concluir o agendamento. Verifique sua conexão e tente novamente, ou entre em contato pelo telefone (00) 00000-0000.';
+        }
         document.getElementById('modalErro').classList.add('open');
       } finally {
         setLoading(false);

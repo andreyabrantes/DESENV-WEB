@@ -7,6 +7,7 @@
 `HTML5` · `CSS3` · `JavaScript` · `Node.js` · `Express` · `SQLite` · `EmailJS`
 
 ![Status](https://img.shields.io/badge/status-conclu%C3%ADdo-brightgreen)
+![Testes](https://img.shields.io/badge/testes-46%20passando-brightgreen)
 ![Projeto](https://img.shields.io/badge/projeto-acad%C3%AAmico-blue)
 ![Licen%C3%A7a](https://img.shields.io/badge/licen%C3%A7a-MIT-lightgrey)
 
@@ -16,44 +17,23 @@
 
 ## 📑 Sumário
 
-- [🌿 Consultório Ramos](#-consultório-ramos)
-  - [📑 Sumário](#-sumário)
-  - [🌟 Sobre o Projeto](#-sobre-o-projeto)
-  - [🎓 Contexto Educacional](#-contexto-educacional)
-  - [✨ Funcionalidades](#-funcionalidades)
-    - [🖥️ Front-end](#️-front-end)
-    - [⚙️ Back-end (API)](#️-back-end-api)
-  - [🛠️ Tecnologias](#️-tecnologias)
-  - [🗂️ Estrutura de Arquivos](#️-estrutura-de-arquivos)
-  - [📄 Páginas](#-páginas)
-    - [🏠 `index.html` — Início](#-indexhtml--início)
-    - [👩‍⚕️ `sobre.html` — Sobre](#️-sobrehtml--sobre)
-    - [📅 `agendar.html` — Agendar Consulta](#-agendarhtml--agendar-consulta)
-    - [❌ `cancelar.html` — Cancelar Consulta](#-cancelarhtml--cancelar-consulta)
-    - [📋 `pre-avaliacao.html` — Pré-Avaliação](#-pre-avaliacaohtml--pré-avaliação)
-  - [🎨 Identidade Visual](#-identidade-visual)
-    - [Paleta de Cores](#paleta-de-cores)
-    - [Tipografia](#tipografia)
-  - [✨ Animações e Efeitos](#-animações-e-efeitos)
-  - [📱 Responsividade](#-responsividade)
-  - [📧 Integração EmailJS](#-integração-emailjs)
-  - [⚙️ Backend (API REST)](#️-backend-api-rest)
-    - [▶️ Como rodar](#️-como-rodar)
-    - [🗄️ Modelo de Dados](#️-modelo-de-dados)
-  - [🔌 Referência da API](#-referência-da-api)
-    - [📋 Resumo dos Endpoints](#-resumo-dos-endpoints)
-    - [1️⃣ `POST /api/agendamentos`](#1️⃣-post-apiagendamentos)
-    - [2️⃣ `GET /api/agendamentos`](#2️⃣-get-apiagendamentos)
-    - [3️⃣ `POST /api/pre-avaliacao`](#3️⃣-post-apipre-avaliacao)
-    - [4️⃣ `GET /api/pre-avaliacao`](#4️⃣-get-apipre-avaliacao)
-    - [5️⃣ `GET /api/horarios-ocupados`](#5️⃣-get-apihorarios-ocupados)
-    - [6️⃣ `GET /api/cancelar/:token`](#6️⃣-get-apicancelartoken)
-    - [❌ Respostas de Erro Gerais](#-respostas-de-erro-gerais)
-    - [🌍 Variáveis de ambiente](#-variáveis-de-ambiente)
-  - [🔒 Segurança](#-segurança)
-  - [🚀 Como Usar](#-como-usar)
-  - [🧪 Testes Manuais da API](#-testes-manuais-da-api)
-  - [👥 Equipe](#-equipe)
+- [🌟 Sobre o Projeto](#-sobre-o-projeto)
+- [🎓 Contexto Educacional](#-contexto-educacional)
+- [✨ Funcionalidades](#-funcionalidades)
+- [🛠️ Tecnologias](#️-tecnologias)
+- [🗂️ Estrutura de Arquivos](#️-estrutura-de-arquivos)
+- [📄 Páginas](#-páginas)
+- [🔐 Painel Administrativo](#-painel-administrativo-adminhtml)
+- [💬 Cancelamento via WhatsApp](#-cancelamento-via-whatsapp)
+- [🎨 Identidade Visual](#-identidade-visual)
+- [📧 Integração EmailJS](#-integração-emailjs)
+- [⚙️ Backend (API REST)](#️-backend-api-rest)
+- [🔌 Referência da API](#-referência-da-api)
+- [🔒 Segurança](#-segurança)
+- [🚀 Como Usar](#-como-usar)
+- [🧪 Testes Automatizados](#-testes-automatizados)
+- [📝 Histórico de Mudanças (v2.0)](#-histórico-de-mudanças-v20)
+- [👥 Equipe](#-equipe)
 
 ---
 
@@ -94,21 +74,22 @@ Este repositório foi desenvolvido como trabalho da disciplina de **Engenharia d
 
 - 🏠 **Landing page** com hero, cards informativos em *accordion*, depoimentos e CTA.
 - 👩‍⚕️ **Página "Sobre"** com bio, especialidades e chamada para agendamento.
-- 📅 **Agendamento** com calendário interativo (bloqueia fins de semana e datas passadas), grade de horários e formulário.
-- ❌ **Cancelamento** de consulta via link enviado por e-mail, com página de confirmação dedicada.
+- 📅 **Agendamento** com calendário interativo (bloqueia fins de semana e datas passadas), grade de horários em tempo real e formulário.
+- ❌ **Cancelamento** pelo link do e-mail (com resumo da consulta antes de confirmar) **ou pelo WhatsApp**, usando um código de 6 caracteres.
 - 📋 **Pré-avaliação** em formulário multi-etapas com barra de progresso animada.
-- 📧 **Envio de e-mails** de confirmação, cancelamento e de pré-avaliação via EmailJS.
+- 🔐 **Painel administrativo** com login, cadastro de administradores, agenda filtrável, cadastro manual de consultas, cancelamento e leitura das pré-avaliações.
+- 📧 **Envio de e-mails** de confirmação e pré-avaliação via EmailJS. Se o CDN do EmailJS falhar, a página continua funcionando e os dados são salvos normalmente.
 - 📱 **Layout responsivo** com menu hamburger e tipografia fluida.
 
 ### ⚙️ Back-end (API)
 
-- 🔌 **REST API** em Express com rotas para agendamentos, pré-avaliações, disponibilidade de horários e **cancelamento**.
-- 🗄️ **Persistência** em SQLite com criação automática de tabelas e migração de colunas.
-- 🛡️ **Segurança**: Helmet (CSP ajustada), rate limiting, CORS configurável e validação de entrada.
-- 🌐 **Serve o front-end** (`express.static`) para que os links de cancelamento enviados por e-mail usem URLs `http://` clicáveis.
-- 📦 **Zero build**: nenhuma etapa de compilação necessária.
-
----
+- 🔌 **REST API** em Express organizada em módulos (`routes/`, `services/`, `auth.js`, `utils.js`).
+- 🗄️ **Persistência** em SQLite com criação automática de tabelas e **migração idempotente** de bancos antigos.
+- 🚫 **Sem horário duplicado**: verificação na rota + índice único parcial `(data, horario) WHERE status='ativo'`, que cobre até requisições simultâneas.
+- 🔐 **Autenticação** do painel com senha em *scrypt* + salt e sessões por token Bearer (o banco guarda apenas o hash do token).
+- 💬 **Cancelamento via WhatsApp** com links `wa.me` (gratuito, sem API paga).
+- 🛡️ **Segurança**: Helmet, rate limiting (geral + login), CORS configurável, validação de entrada e bloqueio de acesso à pasta `/backend`.
+- 🧪 **Testes automatizados** com `node:test`, sem dependências extras (`npm test`).
 
 ## 🛠️ Tecnologias
 
@@ -128,38 +109,41 @@ Este repositório foi desenvolvido como trabalho da disciplina de **Engenharia d
 .
 ├── index.html               # 🏠 Página inicial (landing page)
 ├── script.js                # ⚡ Scripts compartilhados (hamburger, accordion, scroll reveal)
-├── style.css                # 🎨 Estilos globais, navbar, hero e componentes compartilhados
+├── style.css                # 🎨 Estilos globais e componentes compartilhados
 │
-├── sobre.html               # 👩‍⚕️ Página "Sobre" — bio da Dra. Fernanda Ramos
-├── sobre.css                # 🎨 Estilos específicos da página Sobre
+├── sobre.html / sobre.css   # 👩‍⚕️ Página "Sobre"
+├── agendar.html / .css      # 📅 Agendamento (calendário + formulário + código WhatsApp)
+├── cancelar.html            # ❌ Cancelamento (link do e-mail ou código via WhatsApp)
+├── pre-avaliacao.html / .css# 📋 Pré-avaliação multi-etapas
 │
-├── agendar.html             # 📅 Página de agendamento de consultas
-├── agendar.css              # 🎨 Estilos específicos da página Agendar
+├── admin.html               # 🔐 Painel administrativo
+├── admin.css                # 🎨 Estilos do painel
+├── admin.js                 # ⚡ Lógica do painel (login, agenda, WhatsApp, pré-avaliações)
 │
-├── cancelar.html            # ❌ Página de cancelamento (acessada pelo link do e-mail)
-│
-├── pre-avaliacao.html       # 📋 Página de pré-avaliação (formulário multi-etapas)
-├── pre-avaliacao.css        # 🎨 Estilos específicos da página Pré-Avaliação
-│
-├── api.js                   # 🔌 Helpers de integração com o backend (fetch)
+├── api.js                   # 🔌 Helpers de integração com a API (fetch + erros HTTP)
 │
 ├── backend/                 # ⚙️ API Node.js + Express + SQLite
-│   ├── server.js            #   Rotas REST + middlewares de segurança + static do front
-│   ├── database.js          #   Conexão, schema e migração do SQLite
-│   ├── email-template.html  #   Template HTML de referência para o EmailJS
-│   ├── package.json         #   Dependências e scripts
-│   └── database.db          #   Banco local (ignorado pelo Git)
+│   ├── server.js            #   Ponto de entrada (espera o banco e abre a porta)
+│   ├── app.js               #   Monta o Express: segurança, estáticos, rotas e erros
+│   ├── config.js            #   Configurações e variáveis de ambiente
+│   ├── database.js          #   Conexão, schema, migração e helpers com Promise
+│   ├── auth.js              #   Hash de senha (scrypt) e sessões do painel
+│   ├── utils.js             #   Validações, tokens, códigos e links do WhatsApp
+│   ├── services/
+│   │   └── agendamentos.js  #   Regras de negócio: criar, cancelar e ver disponibilidade
+│   ├── routes/
+│   │   ├── publicas.js      #   /api/* usadas pelo site
+│   │   └── admin.js         #   /api/admin/* (protegidas por login)
+│   ├── test/
+│   │   ├── api.test.js      #   Testes de integração da API
+│   │   └── migracao.test.js #   Teste de migração de banco antigo
+│   ├── email-template.html  #   Template de referência para o EmailJS
+│   ├── package.json
+│   └── database.db          #   Banco local (ignorado pelo Git e bloqueado pelo servidor)
 │
 ├── DEV-FRONT-END/           # 📦 Versão isolada da landing page (entrega parcial)
-│   ├── index.html
-│   ├── style.css
-│   ├── script.js
-│   └── README.md
-│
-└── README.md                # 📖 Documentação do projeto
+└── README.md
 ```
-
----
 
 ## 📄 Páginas
 
@@ -205,22 +189,18 @@ Os slots já ocupados são obtidos em tempo real via `GET /api/horarios-ocupados
 
 ### ❌ `cancelar.html` — Cancelar Consulta
 
-Página acessada pelo **link de cancelamento** enviado no e-mail de confirmação. Recebe o token via query string (`cancelar.html?token=...`) e permite ao paciente liberar o horário reservado.
+A página tem dois modos:
 
-| Seção | Descrição |
+| Acesso | O que aparece |
 |---|---|
-| **Hero** | Título e instrução de confirmação |
-| **Detalhes** | Resumo do agendamento carregado a partir do token |
-| **Confirmação** | Botão "Confirmar cancelamento" que chama `GET /api/cancelar/:token` |
-| **Feedback** | Mensagem de sucesso (horário liberado) ou de erro (token inválido/já cancelado) |
+| `cancelar.html?token=...` (link do e-mail) | Resumo da consulta (data, horário, tipo) carregado por `GET /api/cancelar/:token` e o botão **Confirmar cancelamento**, que chama `POST /api/cancelar/:token`. |
+| `cancelar.html` (sem token) | Formulário **Cancelar pelo WhatsApp**: o paciente digita o código de 6 caracteres e o WhatsApp do consultório abre com a mensagem pronta. |
 
-**Fluxo:**
+**Fluxo pelo e-mail:**
 
 1. O paciente clica em **"✕ Cancelar consulta"** no e-mail.
-2. A página abre com o token na URL e exibe o botão de confirmação.
+2. A página mostra o resumo da consulta. Abrir o link **não cancela nada**: o GET só consulta. Assim, leitores de e-mail que "pré-visitam" links não cancelam consultas por acidente.
 3. Ao confirmar, o backend marca o agendamento como `cancelado` e o horário volta a ficar disponível.
-
-> ℹ️ A seção usa a classe `visible` diretamente no HTML (sem depender de *scroll reveal*), garantindo que o card de confirmação apareça imediatamente.
 
 ### 📋 `pre-avaliacao.html` — Pré-Avaliação
 
@@ -233,6 +213,45 @@ Formulário multi-etapas com barra de progresso animada.
 | **3 — Estilo de Vida** | Atividade física, alimentação, nível de estresse (slider), sono, tabagismo, observações |
 
 Ao enviar, os dados são persistidos no banco (via API) e um e-mail formatado é disparado para o consultório via **EmailJS**.
+
+---
+
+## 🔐 Painel Administrativo (`admin.html`)
+
+Acesse `http://localhost:3000/admin.html` com o backend rodando. Há também o link **"Área restrita"** no rodapé do site.
+
+**Primeiro acesso:** enquanto não houver nenhum administrador, a tela pede **nome, e-mail e senha** (mínimo de 8 caracteres) para criar a conta principal. Depois disso, o cadastro inicial é bloqueado (`403`) e novos administradores só podem ser cadastrados por quem já está logado.
+
+| Aba | O que faz |
+|---|---|
+| **Indicadores** | Consultas de hoje, próximas ativas, canceladas e total de pré-avaliações. |
+| **Agendamentos** | Tabela com filtros (período, status e busca por nome, e-mail, telefone ou código). Em cada linha há o botão **WhatsApp**, que envia ao paciente a confirmação com o link de cancelamento, e o botão **Cancelar**, que pede confirmação. O botão **+ Nova consulta** permite à recepção marcar consultas recebidas por telefone ou WhatsApp, mostrando apenas os horários livres. |
+| **WhatsApp** | Busca a consulta pelo código que o paciente mandou e confirma o cancelamento. Depois, o botão **Avisar paciente no WhatsApp** envia a confirmação ao paciente. |
+| **Pré-avaliações** | Lista as fichas recebidas, que se expandem para mostrar todas as respostas, com filtro por nome ou e-mail. |
+| **Administradores** | Lista, cadastra e remove contas. Ninguém consegue remover a própria conta, então sempre sobra pelo menos um administrador. |
+
+A sessão dura 8 horas (`SESSAO_HORAS`) e o token fica no `sessionStorage`, então some quando a aba é fechada. **Sair** invalida o token no servidor.
+
+---
+
+## 💬 Cancelamento via WhatsApp
+
+A implementação usa links **`wa.me`**, que são gratuitos e não exigem conta na API oficial (Meta/Twilio):
+
+1. Ao agendar, o paciente recebe um **código de 6 caracteres** (ex.: `5YJ89K`, sem letras ambíguas como O/0 e I/1) e o botão **"Cancelar pelo WhatsApp"**. O código também vai para o EmailJS nas variáveis `{{codigo}}` e `{{whatsapp_link}}`.
+2. O botão abre o WhatsApp do consultório com a mensagem pronta, contendo o código e a data. Quem não tem mais o botão pode usar `cancelar.html` e digitar o código.
+3. A recepção abre a aba **WhatsApp** do painel, busca o código e confirma o cancelamento. O horário é liberado na hora e o sistema registra `canceladoPor = "whatsapp"`.
+4. Com um clique, a recepção responde ao paciente confirmando o cancelamento.
+
+> ⚙️ Configure o número do consultório (DDI + DDD + número, só dígitos):
+>
+> ```bash
+> WHATSAPP_CONSULTORIO=5511999998888 npm start
+> ```
+>
+> Sem essa variável, o servidor usa um número fictício e avisa no console.
+
+> 🔮 **Evolução possível:** para cancelar sem intervenção humana, basta ligar um webhook da WhatsApp Cloud API ao serviço `cancelar()` já existente em `services/agendamentos.js`, usando o mesmo código.
 
 ---
 
@@ -319,15 +338,16 @@ Os templates são configurados no painel do EmailJS; as variáveis `{{variavel}}
 
 ## ⚙️ Backend (API REST)
 
-API local em **Node.js + Express + SQLite** que persiste agendamentos e pré-avaliações.
+API em **Node.js + Express + SQLite** que persiste agendamentos, pré-avaliações e administradores.
 
 ### ▶️ Como rodar
 
 ```bash
 cd backend
 npm install
-npm start        # inicia em http://localhost:3000
-# ou npm run dev  # reinicia automaticamente a cada alteração
+npm start        # http://localhost:3000  (painel: /admin.html)
+npm run dev      # reinicia automaticamente a cada alteração
+npm test         # roda os testes automatizados
 ```
 
 ### 🗄️ Modelo de Dados
@@ -340,313 +360,142 @@ npm start        # inicia em http://localhost:3000
 | `nomeCliente` | TEXT | NOT NULL |
 | `servico` | TEXT | NOT NULL |
 | `data` | TEXT | NOT NULL (`YYYY-MM-DD`) |
-| `horario` | TEXT | NOT NULL (`HH:MM`) |
-| `email` | TEXT | opcional |
-| `telefone` | TEXT | opcional |
-| `observacoes` | TEXT | opcional |
-| `token` | TEXT | UNIQUE — token de cancelamento (48 hex) |
-| `status` | TEXT | NOT NULL, DEFAULT `'ativo'` (`ativo` \| `cancelado`) |
+| `horario` | TEXT | NOT NULL (`HH:MM`, dentro da grade) |
+| `email` / `telefone` / `observacoes` | TEXT | opcionais |
+| `token` | TEXT | UNIQUE: token do link de cancelamento (48 hex) |
+| `codigo` | TEXT | UNIQUE: código curto para o WhatsApp (6 caracteres) |
+| `origem` | TEXT | `site` \| `admin` |
+| `status` | TEXT | `ativo` \| `cancelado` |
+| `canceladoEm` | DATETIME | quando foi cancelado |
+| `canceladoPor` | TEXT | `paciente-email` \| `whatsapp` \| `admin:<email>` |
 | `criadoEm` | DATETIME | DEFAULT `CURRENT_TIMESTAMP` |
 
-**Tabela `pre_avaliacoes`**
+Índice único parcial `(data, horario) WHERE status = 'ativo'`: impede dois agendamentos ativos no mesmo horário.
 
-| Coluna | Tipo | Restrições |
-|---|---|---|
-| `id` | INTEGER | PK, AUTOINCREMENT |
-| `respostas` | TEXT | NOT NULL (JSON serializado) |
-| `criadoEm` | DATETIME | DEFAULT `CURRENT_TIMESTAMP` |
+**Tabela `pre_avaliacoes`**: `id`, `respostas` (JSON serializado) e `criadoEm`.
 
-> 🔁 O `database.js` executa uma **migração idempotente** que adiciona as colunas `email`, `telefone`, `observacoes`, `token` e `status` caso o banco tenha sido criado com um schema anterior.
+**Tabela `admins`**: `id`, `nome`, `email` (UNIQUE, sem diferenciar maiúsculas de minúsculas), `senhaHash` (`scrypt$salt$hash`) e `criadoEm`.
+
+**Tabela `sessoes`**: `tokenHash` (SHA-256 do token), `adminId` e `expiraEm`.
+
+> 🔁 O `database.js` faz uma **migração idempotente**: em um `database.db` da versão anterior, ele adiciona as colunas novas e gera códigos de WhatsApp para os agendamentos antigos, sem perder dados. Isso é coberto pelo teste `migracao.test.js`.
 
 ---
 
 ## 🔌 Referência da API
 
-**Base URL:** `http://localhost:3000`
+**Base URL:** `http://localhost:3000`. Todas as rotas `/api/*` têm **rate limit** de 100 requisições por IP a cada 15 minutos. O login e o cadastro inicial têm um limite próprio de 10 tentativas.
 
-Todas as rotas estão sob o prefixo `/api/` e sujeitas ao **rate limit** de 100 requisições por IP a cada 15 minutos.
+### 📋 Rotas públicas (usadas pelo site)
 
-### 📋 Resumo dos Endpoints
-
-| Método | Rota | Descrição | Status de sucesso |
+| Método | Rota | Descrição | Sucesso |
 |---|---|---|---|
-| `POST` | `/api/agendamentos` | Cria um agendamento | `201 Created` |
-| `GET` | `/api/agendamentos` | Lista agendamentos (ordenados por data/hora) | `200 OK` |
-| `POST` | `/api/pre-avaliacao` | Salva uma pré-avaliação | `201 Created` |
-| `GET` | `/api/pre-avaliacao` | Lista pré-avaliações (mais recentes primeiro) | `200 OK` |
-| `GET` | `/api/horarios-ocupados?data=YYYY-MM-DD` | Lista horários já ocupados em uma data | `200 OK` |
-| `GET` | `/api/cancelar/:token` | Cancela um agendamento e libera o horário | `200 OK` |
+| `GET` | `/api/config` | Horários da grade, tipos de consulta e WhatsApp do consultório | `200` |
+| `POST` | `/api/agendamentos` | Cria um agendamento | `201` |
+| `GET` | `/api/horarios-ocupados?data=YYYY-MM-DD` | Horários ocupados (só os ativos) | `200` |
+| `GET` | `/api/cancelar/:token` | **Consulta** o resumo da consulta (sem efeito colateral) | `200` |
+| `POST` | `/api/cancelar/:token` | **Cancela** e libera o horário | `200` |
+| `POST` | `/api/pre-avaliacao` | Salva uma pré-avaliação | `201` |
+
+### 🔐 Rotas do painel (`Authorization: Bearer <token>`)
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `GET` | `/api/admin/status` | `{ configurado: bool }` (pública) |
+| `POST` | `/api/admin/setup` | Cadastra o **primeiro** admin (pública; `403` depois disso) |
+| `POST` | `/api/admin/login` | `{ email, senha }` → `{ token, expiraEm, admin }` (pública) |
+| `POST` | `/api/admin/logout` | Invalida o token |
+| `GET` | `/api/admin/me` | Admin logado |
+| `GET` | `/api/admin/resumo` | Contadores do painel |
+| `GET` | `/api/admin/agendamentos?de=&ate=&status=&busca=` | Lista com filtros |
+| `POST` | `/api/admin/agendamentos` | Cadastro manual de consulta (`origem: "admin"`) |
+| `POST` | `/api/admin/agendamentos/:id/cancelar` | Cancela pelo id |
+| `GET` | `/api/admin/codigo/:codigo` | Busca uma consulta pelo código do WhatsApp |
+| `POST` | `/api/admin/cancelar-codigo` | `{ codigo }`: cancela via WhatsApp |
+| `GET` | `/api/admin/pre-avaliacoes` | Lista as pré-avaliações (respostas já em objeto) |
+| `GET` | `/api/admin/usuarios` | Lista os administradores |
+| `POST` | `/api/admin/usuarios` | Cadastra um administrador |
+| `DELETE` | `/api/admin/usuarios/:id` | Remove um administrador (não a própria conta) |
+
+> ⚠️ **Mudança em relação à v1:** `GET /api/agendamentos` e `GET /api/pre-avaliacao` eram públicas e expunham dados de saúde e os tokens de cancelamento de todos os pacientes. Elas foram substituídas pelas rotas protegidas `/api/admin/agendamentos` e `/api/admin/pre-avaliacoes`.
 
 ---
 
-### 1️⃣ `POST /api/agendamentos`
+### `POST /api/agendamentos`
 
-Cria um novo agendamento. Valida campos obrigatórios, formato de data/horário, e-mail e rejeita datas no passado.
-
-**Corpo da requisição:**
-
-| Campo | Tipo | Obrigatório | Limite | Descrição |
-|---|---|---|---|---|
-| `nomeCliente` | string | ✅ | 120 | Nome do paciente |
-| `servico` | string | ✅ | 60 | Tipo de consulta |
-| `data` | string | ✅ | — | Formato `YYYY-MM-DD`, não pode ser passada |
-| `horario` | string | ✅ | — | Formato `HH:MM` |
-| `email` | string | ❌ | 254 | Deve ser um e-mail válido se informado |
-| `telefone` | string | ❌ | 20 | Telefone de contato |
-| `observacoes` | string | ❌ | 500 | Observações livres |
-
-**Exemplo:**
+| Campo | Tipo | Obrigatório | Regra |
+|---|---|---|---|
+| `nomeCliente` | string | ✅ | até 120 caracteres |
+| `servico` | string | ✅ | até 60 caracteres |
+| `data` | string | ✅ | `YYYY-MM-DD`, data existente, não passada, de segunda a sexta |
+| `horario` | string | ✅ | um dos horários de `GET /api/config`. Se a data for hoje, o horário ainda não pode ter passado |
+| `email` | string | ❌ | e-mail válido |
+| `telefone` | string | ❌ | DDD + número (10 a 13 dígitos). No site é obrigatório, porque é usado no WhatsApp |
+| `observacoes` | string | ❌ | até 500 caracteres |
 
 ```bash
 curl -X POST http://localhost:3000/api/agendamentos \
   -H "Content-Type: application/json" \
-  -d '{
-    "nomeCliente": "Maria Silva",
-    "servico": "Primeira consulta",
-    "data": "2026-12-15",
-    "horario": "10:00",
-    "email": "maria@email.com",
-    "telefone": "(11) 99999-9999",
-    "observacoes": "Preferência pelo período da manhã."
-  }'
+  -d '{"nomeCliente":"Maria Silva","servico":"Retorno","data":"2026-12-15","horario":"10:00","telefone":"(11) 99999-9999"}'
 ```
 
-**Resposta `201 Created`:**
+**`201 Created`:**
 
 ```json
 {
   "id": 1,
   "nomeCliente": "Maria Silva",
-  "servico": "Primeira consulta",
+  "servico": "Retorno",
   "data": "2026-12-15",
   "horario": "10:00",
-  "email": "maria@email.com",
   "telefone": "(11) 99999-9999",
-  "observacoes": "Preferência pelo período da manhã.",
-  "token": "a1b2c3d4e5f6...48 caracteres hexadecimais",
+  "token": "a1b2c3...48 hex",
+  "codigo": "5YJ89K",
+  "origem": "site",
   "status": "ativo",
-  "criadoEm": "2026-09-17T22:31:34.502Z"
+  "whatsappCancelamento": "https://wa.me/5511999998888?text=Ol%C3%A1!..."
 }
 ```
 
-> 🔑 O campo `token` é gerado no servidor (`crypto.randomBytes(24)`) e usado no **link de cancelamento** enviado por e-mail. Ele é único e imprevisível, funcionando como uma credencial de cancelamento.
+**Erros:** `400` (validação, com a lista em `detalhes`) e `409` (horário já reservado).
 
-**Resposta `400 Bad Request` (validação):**
+### `GET` / `POST /api/cancelar/:token`
 
-```json
-{
-  "error": "Validação falhou",
-  "detalhes": [
-    "nomeCliente é obrigatório",
-    "servico é obrigatório",
-    "data não pode estar no passado",
-    "email inválido"
-  ]
-}
-```
+| Status | Quando |
+|---|---|
+| `200` | GET: `{ agendamento, podeCancelar }` com o resumo, sem e-mail nem telefone · POST: `{ mensagem, agendamento }` |
+| `400` | Token com formato inválido |
+| `404` | Token inexistente |
+| `409` | POST em agendamento já cancelado ou em consulta que já aconteceu |
 
----
+### `POST /api/pre-avaliacao`
 
-### 2️⃣ `GET /api/agendamentos`
-
-Lista todos os agendamentos, ordenados por `data` e `horario` (crescente).
-
-**Exemplo:**
-
-```bash
-curl http://localhost:3000/api/agendamentos
-```
-
-**Resposta `200 OK`:**
-
-```json
-[
-  {
-    "id": 1,
-    "nomeCliente": "Maria Silva",
-    "servico": "Primeira consulta",
-    "data": "2026-12-15",
-    "horario": "10:00",
-    "email": "maria@email.com",
-    "telefone": "(11) 99999-9999",
-    "observacoes": "Preferência pelo período da manhã.",
-    "criadoEm": "2026-09-17 22:31:34"
-  }
-]
-```
-
----
-
-### 3️⃣ `POST /api/pre-avaliacao`
-
-Salva o formulário completo de pré-avaliação. O corpo é um **objeto JSON livre** (as respostas são serializadas e armazenadas na coluna `respostas`).
-
-**Regras:**
-
-- O corpo deve ser um objeto JSON **não vazio** (arrays são rejeitados).
-- Máximo de **200 campos** por payload.
-
-**Exemplo:**
-
-```bash
-curl -X POST http://localhost:3000/api/pre-avaliacao \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nomeCompleto": "Maria Silva",
-    "email": "maria@email.com",
-    "motivo": "Consulta de rotina",
-    "nivelEstresse": "5"
-  }'
-```
-
-**Resposta `201 Created`:**
-
-```json
-{
-  "id": 1,
-  "respostas": {
-    "nomeCompleto": "Maria Silva",
-    "email": "maria@email.com",
-    "motivo": "Consulta de rotina",
-    "nivelEstresse": "5"
-  },
-  "criadoEm": "2026-09-17T22:31:43.977Z"
-}
-```
-
-**Resposta `400 Bad Request`:**
-
-```json
-{ "error": "É necessário enviar um objeto JSON com as respostas" }
-```
-
----
-
-### 4️⃣ `GET /api/pre-avaliacao`
-
-Lista as pré-avaliações salvas, ordenadas por `criadoEm` e `id` (decrescente). O campo `respostas` é **convertido de volta para objeto** automaticamente.
-
-**Exemplo:**
-
-```bash
-curl http://localhost:3000/api/pre-avaliacao
-```
-
-**Resposta `200 OK`:**
-
-```json
-[
-  {
-    "id": 1,
-    "respostas": {
-      "nomeCompleto": "Maria Silva",
-      "email": "maria@email.com",
-      "motivo": "Consulta de rotina",
-      "nivelEstresse": "5"
-    },
-    "criadoEm": "2026-09-17 22:31:43"
-  }
-]
-```
-
----
-
-### 5️⃣ `GET /api/horarios-ocupados`
-
-Retorna os horários já ocupados em uma data específica — usado pelo calendário de agendamento para desabilitar slots indisponíveis.
-
-**Query params:**
-
-| Parâmetro | Obrigatório | Descrição |
-|---|---|---|
-| `data` | ✅ | Data no formato `YYYY-MM-DD` |
-
-**Exemplo:**
-
-```bash
-curl "http://localhost:3000/api/horarios-ocupados?data=2026-12-15"
-```
-
-**Resposta `200 OK`:**
-
-```json
-{
-  "data": "2026-12-15",
-  "ocupados": ["10:00"]
-}
-```
-
-**Resposta `400 Bad Request` (parâmetro ausente/inválido):**
-
-```json
-{ "error": "Parâmetro data é obrigatório (formato YYYY-MM-DD)" }
-```
-
-> ℹ️ Apenas agendamentos com `status = "ativo"` ocupam o horário. Agendamentos cancelados **não** aparecem nesta lista, ou seja, o horário volta a ficar disponível automaticamente após o cancelamento.
-
----
-
-### 6️⃣ `GET /api/cancelar/:token`
-
-Cancela um agendamento a partir do **token único** enviado no link do e-mail de confirmação. Ao cancelar, o `status` passa de `ativo` para `cancelado` e o horário é **liberado imediatamente** para novos agendamentos.
-
-**Path params:**
-
-| Parâmetro | Obrigatório | Descrição |
-|---|---|---|
-| `token` | ✅ | Token de 48 caracteres hexadecimais gerado no momento do agendamento |
-
-**Exemplo:**
-
-```bash
-curl "http://localhost:3000/api/cancelar/a1b2c3d4e5f6..."
-```
-
-**Resposta `200 OK`:**
-
-```json
-{
-  "mensagem": "Agendamento cancelado com sucesso. O horário foi liberado.",
-  "agendamento": {
-    "id": 1,
-    "nomeCliente": "Maria Silva",
-    "servico": "Primeira consulta",
-    "data": "2026-12-15",
-    "horario": "10:00",
-    "status": "cancelado"
-  }
-}
-```
-
-**Respostas de erro:**
-
-| Status | Corpo | Quando ocorre |
-|---|---|---|
-| `400` | `{ "error": "Token de cancelamento inválido" }` | Token com formato inválido |
-| `404` | `{ "error": "Agendamento não encontrado" }` | Token inexistente |
-| `409` | `{ "error": "Este agendamento já foi cancelado", ... }` | Cancelamento repetido |
-
-> 🔗 **Fluxo completo:** o front-end (`agendar.html`) recebe o `token` na resposta do `POST /api/agendamentos` e o injeta na variável `{{cancel_link}}` do template do EmailJS. O e-mail leva o paciente à página `cancelar.html?token=...`, que chama esta rota após a confirmação.
-
----
+Recebe um objeto JSON livre e não vazio, com no máximo 200 campos. A resposta é `201 { id, criadoEm }`: as respostas **não** são devolvidas, por serem dados de saúde.
 
 ### ❌ Respostas de Erro Gerais
 
-| Status | Corpo | Quando ocorre |
-|---|---|---|
-| `400` | `{ "error": "...", "detalhes": [...] }` | Falha de validação de entrada |
-| `404` | `{ "error": "Rota não encontrada" }` | Rota inexistente |
-| `429` | `{ "error": "Muitas requisições. Tente novamente mais tarde." }` | Rate limit excedido |
-| `500` | `{ "error": "Erro ao ..." }` | Falha interna (ex.: erro no banco) |
-
----
+| Status | Quando ocorre |
+|---|---|
+| `400` | Validação ou JSON malformado |
+| `401` | Rota do painel sem token ou com sessão expirada |
+| `403` | Cadastro inicial (`setup`) depois que o painel já foi configurado |
+| `404` | Rota ou recurso inexistente |
+| `409` | Conflito (horário ocupado, cancelamento repetido, e-mail de admin duplicado) |
+| `413` | Corpo maior que 100 KB |
+| `429` | Rate limit excedido |
+| `500` | Falha interna (o detalhe fica só no log do servidor) |
 
 ### 🌍 Variáveis de ambiente
 
 | Variável | Padrão | Descrição |
 |---|---|---|
-| `PORT` | `3000` | Porta em que o servidor escuta |
-| `ALLOWED_ORIGINS` | *(vazio)* | Lista de origens CORS permitidas, separadas por vírgula |
+| `PORT` | `3000` | Porta do servidor |
+| `DB_PATH` | `backend/database.db` | Arquivo SQLite (`:memory:` nos testes) |
+| `ALLOWED_ORIGINS` | *(vazio)* | Origens CORS permitidas, separadas por vírgula |
+| `WHATSAPP_CONSULTORIO` | `5500000000000` | WhatsApp do consultório (só dígitos, com 55) |
+| `SESSAO_HORAS` | `8` | Duração da sessão do painel |
+| `RATE_LIMIT_MAX` | `100` | Requisições por IP a cada 15 min em `/api` |
+| `LOGIN_LIMIT_MAX` | `10` | Tentativas de login por IP a cada 15 min |
 
 ---
 
@@ -654,114 +503,80 @@ curl "http://localhost:3000/api/cancelar/a1b2c3d4e5f6..."
 
 | Medida | Onde | Descrição |
 |---|---|---|
-| **Helmet** | `server.js` | Headers HTTP de segurança (`X-Content-Type-Options`, `X-Frame-Options`, CSP, etc.) |
-| **CSP ajustada** | `server.js` | `script-src-attr 'unsafe-inline'` (handlers inline) e `upgrade-insecure-requests` desativado para funcionar em `http://localhost` |
-| **`x-powered-by` desativado** | `server.js` | Remove o header que expõe o uso do Express |
-| **Rate limiting** | `server.js` | Limite de 100 requisições por IP a cada 15 min nas rotas `/api/*` |
-| **CORS configurável** | `server.js` | Allowlist via `ALLOWED_ORIGINS`; sem a variável, permite apenas `localhost`/`127.0.0.1` e `file://` |
-| **Limite de corpo** | `server.js` | Corpo JSON limitado a 100 KB |
-| **Validação de entrada** | `server.js` | Tamanho máximo e formato de data/horário/e-mail validados no servidor |
-| **Token de cancelamento** | `server.js` | Token de 48 hex (`crypto.randomBytes(24)`) validado por regex antes da consulta |
-| **Limite de campos** | `server.js` | Pré-avaliação aceita no máximo 200 campos |
-| **Queries parametrizadas** | `server.js` | Previne injeção de SQL |
-| **Escape de saída** | `agendar.html`, `pre-avaliacao.html`, `cancelar.html` | Dados do usuário renderizados via `textContent`/DOM (evita XSS) |
-| **No-cache (dev)** | `server.js` | HTML/CSS/JS servidos com `Cache-Control: no-store` para evitar versões antigas em cache |
+| **Pasta `/backend` bloqueada** | `app.js` | O servidor estático não entrega `database.db`, código, `node_modules`, arquivos `.md` nem *dotfiles* (na v1, o banco podia ser baixado pelo navegador) |
+| **Rotas sensíveis protegidas** | `routes/admin.js` | Listagens de pacientes e pré-avaliações só com login |
+| **Senhas com scrypt + salt** | `auth.js` | Comparação em tempo constante (`timingSafeEqual`) |
+| **Login sem vazar e-mails** | `routes/admin.js` | Mesma mensagem e mesmo custo de hash para e-mail inexistente e senha errada |
+| **Sessão por token** | `auth.js` | 256 bits aleatórios. O banco guarda só o SHA-256 do token. O token expira e é invalidado no logout ou quando o admin é removido |
+| **Rate limit de login** | `routes/admin.js` | 10 tentativas a cada 15 min por IP |
+| **Sem horário duplicado** | `services/agendamentos.js` + índice parcial | Também cobre reservas simultâneas (testado com 5 requisições paralelas) |
+| **GET sem efeito colateral** | `routes/publicas.js` | Abrir o link do e-mail não cancela. Só o `POST` cancela |
+| **Helmet + CSP** | `app.js` | Headers de segurança, sem `x-powered-by` |
+| **CORS configurável** | `app.js` | Allowlist via `ALLOWED_ORIGINS` |
+| **`Cache-Control: no-store`** | `app.js` | Respostas da API (dados pessoais) não ficam em cache |
+| **Queries parametrizadas** | todo o backend | Previne SQL injection (há teste para isso) |
+| **Escape de saída** | todas as páginas e `admin.js` | Dados renderizados via `textContent`/DOM (evita XSS) |
 
-> 🌐 **CORS em produção:** defina a variável de ambiente `ALLOWED_ORIGINS` com os domínios permitidos:
->
-> ```bash
-> ALLOWED_ORIGINS="https://meudominio.com,https://www.meudominio.com" npm start
-> ```
-
-> ⚠️ **Limitações conhecidas (contexto educacional):** não há autenticação/autorização, as rotas `GET` são públicas e as credenciais do EmailJS ficam expostas no cliente. Em um cenário real, seria necessário adicionar autenticação, um proxy para o EmailJS e um painel administrativo protegido.
+> ⚠️ **Limitações conhecidas (contexto educacional):** as chaves do EmailJS ficam no cliente, não há HTTPS em ambiente local e o cancelamento via WhatsApp depende de uma pessoa confirmar no painel.
 
 ---
 
 ## 🚀 Como Usar
 
-O front-end **não requer instalação nem build**. Há duas formas de executá-lo:
-
-**Opção A — Abrir direto no navegador (sem backend):**
-
-```bash
-# 1. Clone o repositório
-git clone https://github.com/andreyabrantes/front-6periodo.git
-cd front-6periodo
-
-# 2. Abra o site no navegador
-open index.html
-# ou arraste o arquivo para o navegador
-```
-
-**Opção B — Servir tudo pelo backend (recomendado):**
-
 ```bash
 cd backend
 npm install
-npm start        # http://localhost:3000
+WHATSAPP_CONSULTORIO=5511999998888 npm start
 ```
 
-Com o backend rodando, acesse `http://localhost:3000/index.html`. O Express serve o front-end via `express.static`, o que garante que os **links de cancelamento enviados por e-mail** usem URLs `http://` clicáveis (links `file://` são bloqueados por clientes de e-mail).
+No Windows (PowerShell): `$env:WHATSAPP_CONSULTORIO="5511999998888"; npm start`
 
-> 💡 **Dica:** para que o agendamento, o cancelamento e a pré-avaliação persistam dados, o backend precisa estar rodando em `http://localhost:3000`. Sem ele, o front-end ainda funciona, mas o envio falhará na etapa de persistência.
+1. Abra `http://localhost:3000/index.html` para ver o site.
+2. Abra `http://localhost:3000/admin.html` e crie a conta de administrador no primeiro acesso.
+
+> 💡 O front-end ainda abre direto pelo arquivo (`file://`), mas o agendamento, o cancelamento e a pré-avaliação precisam do backend rodando.
 
 ---
 
-## 🧪 Testes Manuais da API
-
-Com o backend rodando, valide as rotas rapidamente:
+## 🧪 Testes Automatizados
 
 ```bash
-# 1. Criar agendamento (espera 201)
-curl -X POST http://localhost:3000/api/agendamentos \
-  -H "Content-Type: application/json" \
-  -d '{"nomeCliente":"Teste","servico":"Retorno","data":"2026-12-20","horario":"09:00"}'
-
-# 2. Listar agendamentos (espera 200)
-curl http://localhost:3000/api/agendamentos
-
-# 3. Consultar horários ocupados (espera 200)
-curl "http://localhost:3000/api/horarios-ocupados?data=2026-12-20"
-
-# 4. Salvar pré-avaliação (espera 201)
-curl -X POST http://localhost:3000/api/pre-avaliacao \
-  -H "Content-Type: application/json" \
-  -d '{"nomeCompleto":"Teste","motivo":"Rotina"}'
-
-# 5. Listar pré-avaliações (espera 200)
-curl http://localhost:3000/api/pre-avaliacao
-
-# 6. Testar validação (espera 400)
-curl -X POST http://localhost:3000/api/agendamentos \
-  -H "Content-Type: application/json" \
-  -d '{"nomeCliente":"","servico":"","data":"2020-01-01","horario":"99:99"}'
-
-# 7. Testar rota inexistente (espera 404)
-curl http://localhost:3000/api/rota-inexistente
+cd backend
+npm test
 ```
 
-**Testando o fluxo de cancelamento:**
+Os testes usam o runner nativo do Node (`node:test`), sobem o app numa porta aleatória e usam um banco **em memória**, sem tocar no `database.db`. O que é coberto:
 
-```bash
-# 1. Crie um agendamento e copie o "token" da resposta
-curl -X POST http://localhost:3000/api/agendamentos \
-  -H "Content-Type: application/json" \
-  -d '{"nomeCliente":"Teste Cancel","servico":"Retorno","data":"2026-12-22","horario":"14:00"}'
+| Grupo | O que é verificado |
+|---|---|
+| **Arquivos estáticos** | Páginas servidas; `database.db`, código e *dotfiles* bloqueados (inclusive com URL codificada); headers do Helmet |
+| **Agendamentos** | Criação com token, código e link do WhatsApp; horário ocupado (`409`); **5 reservas simultâneas → só 1 vence**; validações (campos, data passada ou inexistente, fim de semana, horário fora da grade, horário de hoje que já passou, e-mail, telefone sem DDD); JSON malformado |
+| **Cancelamento por e-mail** | GET não cancela e informa `podeCancelar`; POST cancela e libera o horário; consulta que já aconteceu não pode ser cancelada pelo paciente; cancelamento repetido (`409`); token inválido ou inexistente |
+| **Pré-avaliação** | Salva sem devolver os dados de saúde; rejeita corpo vazio, array e mais de 200 campos |
+| **Painel** | `401` sem login; cadastro inicial (uma única vez); hash scrypt; login sem diferenciar maiúsculas e erro genérico; filtros; SQL injection; cadastro manual; cancelamento por id com auditoria; resumo; cadastro e remoção de admins (a sessão do removido cai); logout |
+| **WhatsApp** | Busca por código (aceita minúsculas e espaços); cancelamento por código libera o horário; exige login |
+| **Migração** | Banco no schema antigo é atualizado sem perder dados |
 
-# 2. Confirme que o horário está ocupado (espera conter "14:00")
-curl "http://localhost:3000/api/horarios-ocupados?data=2026-12-22"
+Para testar manualmente, os exemplos `curl` acima continuam válidos. O fluxo completo pelo navegador (agendar → código → cancelar pelo WhatsApp no painel) também foi verificado.
 
-# 3. Cancele usando o token (espera 200 + "horário foi liberado")
-curl "http://localhost:3000/api/cancelar/SEU_TOKEN_AQUI"
+---
 
-# 4. Confirme que o horário foi liberado (espera lista vazia)
-curl "http://localhost:3000/api/horarios-ocupados?data=2026-12-22"
+## 📝 Histórico de Mudanças (v2.0)
 
-# 5. Repita o cancelamento (espera 409 — já cancelado)
-curl "http://localhost:3000/api/cancelar/SEU_TOKEN_AQUI"
-```
-
-> ✅ Todas as rotas acima foram **validadas manualmente** durante o desenvolvimento deste README.
+- **Novo:** painel administrativo com login, cadastro de administradores, agenda filtrável, cadastro manual de consultas e leitura de pré-avaliações.
+- **Novo:** cancelamento de consultas via WhatsApp (código + links `wa.me`).
+- **Novo:** testes automatizados (`npm test`).
+- **Correção de segurança:** o `database.db` podia ser baixado em `/backend/database.db`.
+- **Correção de segurança:** as listagens públicas de pacientes e pré-avaliações foram removidas e agora exigem login.
+- **Correção:** dois pacientes podiam reservar o mesmo horário.
+- **Correção:** o backend aceitava fins de semana, horários fora da grade e horários de hoje que já tinham passado.
+- **Correção:** o paciente conseguia "cancelar" uma consulta que já tinha acontecido. Agora só o administrador pode.
+- **Correção:** a confirmação dizia que o e-mail tinha sido enviado mesmo quando o envio falhava.
+- **Melhoria:** no celular, a tabela do painel vira uma lista de cartões, sem rolagem lateral.
+- **Correção:** se o CDN do EmailJS não carregasse, as páginas de agendamento e pré-avaliação paravam de funcionar.
+- **Correção:** abrir o link de cancelamento com `GET` já cancelava; agora o cancelamento só acontece com `POST`, depois da confirmação.
+- **Refatoração:** `server.js` dividido em `app.js`, `config.js`, `auth.js`, `utils.js`, `services/` e `routes/`, com `async/await`.
+- **Refatoração:** `api.js` usa a mesma origem quando o site é servido pelo backend, o que facilita o deploy.
 
 ---
 

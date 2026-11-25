@@ -394,6 +394,53 @@
   line-height: 1.8;
 }
 
+.modal { max-height: 92vh; overflow-y: auto; }
+
+.modal-whats {
+  border: 1.5px dashed var(--purple2);
+  border-radius: 16px;
+  padding: 1rem 1.2rem 1.2rem;
+  margin-bottom: 1.5rem;
+}
+.modal .modal-whats-title { color: var(--dark); font-weight: 500; margin-bottom: .2rem; }
+.modal .modal-whats-text { margin-bottom: .6rem; font-size: .82rem; }
+
+.modal-whats-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.6rem;
+  letter-spacing: .3em;
+  color: var(--purple);
+  font-weight: 700;
+  margin-bottom: .9rem;
+}
+
+.btn-whats {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  width: 100%;
+  padding: .8rem 1rem;
+  border-radius: 50px;
+  background: #1f8f4e;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: .9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background .2s, transform .2s;
+}
+.btn-whats:hover { background: #18753f; transform: translateY(-1px); }
+
+.whats-code-input {
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: .3em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .agendar-grid { grid-template-columns: 1fr; }
@@ -401,3 +448,5 @@
   .agendar-hero { padding: 5rem 6% 3rem; }
   .slots-grid { grid-template-columns: repeat(4, 1fr); }
 }
+
+[hidden] { display: none !important; }
